@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
   <head>
-    
     <link rel='stylesheet' href='/stylesheets/style.css' />
     <link rel="stylesheet" href="/stylesheets/fontawesome-free-6.5.1-web/css/all.min.css" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -13,26 +12,31 @@
   </style>
   </head>
   <body>
+    <% if (info == 'yes') { 
+     %>
+      <script> window.location.href = 'http://localhost:3000/users/manager/1';</script>
+  <% } else { %>
     <div class="vh-100">
       <div class="container py-5 h-100">
         <div class="row d-flex align-items-center justify-content-center h-100">
           <div class="col-md-8 col-lg-7 col-xl-6">
-            <img src="./images/draw2.webp"
+            <img src="../images/draw2.webp"
               class="img-fluid" alt="Phone image">
           </div>
           <div class="col-md-7 col-lg-5 col-xl-5 offset-xl-1 p-4">
-            <form class="border bg-light rounded p-4">
+            <form action="/users/login" method="post" class="border bg-light rounded p-4" onsubmit="return validateForm()">
               <h3 class="mb-5 text-center">Sign up</h3>
               <!-- Email input -->
               <div class="form-outline mb-4">
-                <input type="email" id="form1Example13" class="form-control form-control-lg" />
-                <label class="form-label" for="form1Example13">Email address</label>
+                <!-- <input type="email" id="form1Example13" class="form-control form-control-lg" /> -->
+                <label class="form-label" for="form1Example13" >Email address</label>
+                <input type="email" id="form1Example13" name="username" class="form-control form-control-lg" />       
               </div>
-    
               <!-- Password input -->
               <div class="form-outline mb-4">
-                <input type="password" id="form1Example23" class="form-control form-control-lg" />
                 <label class="form-label" for="form1Example23">Password</label>
+                <input type="password" id="form1Example23" name = "pass" class="form-control form-control-lg" />
+                
               </div>
     
               
@@ -67,5 +71,35 @@
         </div>
       </div>
     </div>
+  <% } %>
+   
   </body>
 </html>
+<script>
+    function validateForm() {
+  var name = document.getElementById('form1Example13').value;
+  var email = document.getElementById('form1Example23').value;
+  // Kiểm tra xem các trường đã được điền đầy đủ chưa
+  if (name == "") {
+    alert("Vui lòng điền đầy đủ thông tin");
+    document.getElementById('form1Example13').focus()
+    return false;
+  }
+  else if( email == ""){
+    alert("Vui lòng điền đầy đủ thông tin");
+    document.getElementById('form1Example23').focus()
+    return false;
+}
+  // Kiểm tra tính hợp lệ của địa chỉ email
+  // var emailRegex = /\S+@\S+\.\S+/;
+  // if (!emailRegex.test(email)) {
+  //   alert("Email không hợp lệ");
+  //   document.getElementById('form1Example13').focus()
+  //   return false;
+  // }
+  
+
+  // Nếu dữ liệu hợp lệ, cho phép submit
+  return true;
+}
+</script>

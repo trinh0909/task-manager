@@ -3,9 +3,9 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  if(!req.session.user)
+  res.render('index', { info: 'no' });
+  else res.render('index', { info: 'yes' });
 });
-router.get('/f', function(req, res) {
-  res.render('index');
-});
+
 module.exports = router;

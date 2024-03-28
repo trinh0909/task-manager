@@ -3,12 +3,22 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const session = require('express-session');
+/* GET users listing. */
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 var app = express();
-
+app.use(session({
+  secret: 'mySecret', // Key bí mật để mã hóa session (có thể được thay đổi)
+  resave: false,
+  saveUninitialized: true
+}));
+app.use((req, res, next) => {
+  res.locals.session = req.session;
+  next();
+});
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');

@@ -1,5 +1,9 @@
+*{
+  margin-top: 0 !important;
+        padding-top: 0 !important;
+}
 body {
-  padding: 50px;
+ /* padding: 50px; */
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
