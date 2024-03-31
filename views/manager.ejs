@@ -12,11 +12,18 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
       <style>
         .cl{
+<<<<<<< HEAD
           background-color: rgb(255, 255, 255);
           margin-left: 21%; 
+=======
+          background-color: #00B7FF;
+          margin-left: 20.5%; 
+>>>>>>> 502bd4ba4340565f0073b7dbcf5517de96250a5a
           border-bottom: 1px solid rgb(210, 210, 210);
           box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.1);
+       
         }
+        
         .br1{
           background-color: white;
         }
@@ -32,6 +39,7 @@
           height: 100vh;
         }
         .navbar-nav .nav-link {
+<<<<<<< HEAD
           
           padding: 8px 16px; /* Điều chỉnh độ dày và khoảng cách của phần tử */
         }
@@ -49,9 +57,29 @@
           width: 100%;
               flex-grow: 1;
         } */
+=======
+    
+    padding: 8px 16px; /* Điều chỉnh độ dày và khoảng cách của phần tử */
+  }
+  .anh{
+    width: 80% ; /* Thiết lập chiều rộng của ảnh */
+    height: auto;
+  }
+  .nav-item{
+    text-align: center;
+  }
+  /* .nbheight{
+    width: 100%;
+        flex-grow: 1;
+  } */
+  .colnb a{
+          color: white;
+        }
+>>>>>>> 502bd4ba4340565f0073b7dbcf5517de96250a5a
       </style>
 </head>
 <body>
+ 
     <div class="cl navbar navbar-expand-lg navbar-light">
         <div class="container-fluid">
         <a class="navbar-brand mt-3" href="#">Projects</a>
@@ -59,7 +87,7 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse mt-3" id="navbarNavAltMarkup">
-            <div class="navbar-nav">
+            <div class="colnb navbar-nav">
                 <%if(session.user.access == 1){ if(loai == 'cv'  ) { var count = 0 %>
                     <a class="nav-item nav-link active" id ='1' href="/users/manager?page=1&loai=<%= loai %>">Công việc chưa giao</a> 
                     <a class="nav-item nav-link" id ='2' href="/users/manager?page=2&loai=<%= loai %>">Công việc đã giao</a>   
@@ -73,10 +101,21 @@
                 <a class="nav-item nav-link" id ='2' href="/users/manager?page=2&loai=<%= loai %>">đã duyệt</a>   
                 <a class="nav-item nav-link" id ='3'  href="/users/manager?page=3&loai=<%= loai %>">reject</a>
                <%} } %>
-               <% if(session.user.access == 2 || session.user.access == 3) { if(loai == 'cv'  ) {%>
-                <a class="nav-item nav-link" id="1" href="/users/manager/1">Công việc cần hoàn thành</a>
-                <a class="nav-item nav-link" id="2" href="/users/manager/2">Công việc đã hoàn thành</a>   
-           <% } }%>
+               <% if(session.user.access == 2 || session.user.access == 3) { if(loai == 'cv'  ) {%>  
+                <a class="nav-item nav-link" id ='1' href="/users/manager?page=1&loai=<%= loai %>">công việc cần hoàn thành</a> 
+                <a class="nav-item nav-link" id ='2' href="/users/manager?page=2&loai=<%= loai %>">công việc đã hoàn thành</a>   
+                
+           <% } else if(loai == 'kpi'){ %>
+            <a class="nav-item nav-link" id ='1' href="/users/manager?page=1&loai=<%= loai %>">tháng này</a> 
+            <a class="nav-item nav-link" id ='2' href="/users/manager?page=2&loai=<%= loai %>">các tháng trước</a>   
+            
+          <% } else if(loai == 'dkc'){ %>
+            <a class="nav-item nav-link" id ='1' href="/users/manager?page=1&loai=<%= loai %>">Check in/ Check out</a> 
+            <a class="nav-item nav-link" id ='2' href="/users/manager?page=2&loai=<%= loai %>">đăng kí ca làm</a>
+            <a class="nav-item nav-link" id ='3' href="/users/manager?page=3&loai=<%= loai %>">số ca làm đã làm việc</a> 
+          <%}
+          
+          }%>
             </div>
           </div>
         </div>
@@ -97,7 +136,7 @@
               <a class="nav-link pl-0" id = "nv" href="/users/manager?page=<%= id %>&loai=nv">Nhân viên</a>
             </li>
             <li class="nav-item mt-4">
-              <a class="nav-link pl-0" id="tk" href="/users/manager?page=<%= id %>&loai=tk">Tài khoản</a>
+              <a class="nav-link pl-0" id="tkad" href="/users/manager?page=<%= id %>&loai=tkad">Tài khoản</a>
             </li>
             <li class="nav-item mt-4">
               <a class="nav-link pl-0" id="cl" href="/users/manager?page=<%= id %>&loai=cl">Ca làm</a>
@@ -107,10 +146,10 @@
             <a class="nav-link pl-0" id = "cv" href="/users/manager?page=<%= id %>&loai=cv">Công việc</a>
           </li>
           <li class="nav-item mt-4">
-            <a class="nav-link pl-0" id = "nv" href="/users/manager?page=<%= id %>&loai=nv">KPI</a>
+            <a class="nav-link pl-0" id = "kpi" href="/users/manager?page=<%= id %>&loai=kpi">KPI</a>
           </li>
           <li class="nav-item mt-4">
-            <a class="nav-link pl-0" id="tk" href="/users/manager?page=<%= id %>&loai=tk">Đăng ký ca làm</a>
+            <a class="nav-link pl-0" id="dkc" href="/users/manager?page=<%= id %>&loai=dkc">Đăng ký ca làm</a>
           </li>
        <% }
             %>
@@ -118,25 +157,36 @@
             <a class="nav-link pl-0" id="tt" href="/users/manager?page=<%= id %>&loai=tt">Thông tin cá nhân</a>
           </li>
           <li class="nav-item mt-4">
-            <a class="nav-link pl-0" href="#">Đăng xuất</a>
+            <a class="nav-link pl-0" href="/users/logout">Đăng xuất</a>
           </li>
          
         </ul>
       </div>
+<<<<<<< HEAD
       <div style="margin-left: 20%; width: 80%;">
         <%- include('staff.ejs') %>
       </div>      
+=======
+     
+    <div>
+      <% if(data != 0){ %>
+        <% for(let e of data) { %>
+            <h1><%= e.name %></h1>
+        <% } %>
+    <% } %>
+    
+    </div>
+    
+>>>>>>> 502bd4ba4340565f0073b7dbcf5517de96250a5a
 </body>
 </html>
 <script>
    
-    var a = "<%= id.trim().replace(/\s/g, '') %>";
-    var b = "<%= loai.trim().replace(/\s/g, '') %>"; // Loại bỏ tất cả các khoảng trắng
-    //alert(b)
-    document.getElementById(a).style.color = "black";
-    document.getElementById(b).style.color = "black";
-    //document.getElementById(a).style.fontWeight = "bold";
-   // document.getElementById('1').style.color = "red";
+  var a = "<%= id.trim().replace(/\s/g, '') %>";
+  var b = "<%= loai.trim().replace(/\s/g, '') %>";
+ // alert(b)
+  var element = document.getElementById(b);
+  document.getElementById(a).style.color = "black";
+  document.getElementById(b).style.color = "black";
 </script>
-
 
