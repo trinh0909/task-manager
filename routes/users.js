@@ -58,9 +58,33 @@ router.get('/manager', function(req, res, next) {
   if (req.session.user) {
     var id = req.query['page']
     var loai = req.query['loai']
-   // res.send(loai)
-   res.render('manager.ejs',{id:id,loai:loai}); // Render template 'manager.ejs' khi session user đã tồn tại
+    var data1 = []
+    var sql = ''
+    if(req.session.user.access == 1 ){
+     
+      if(loai == 'cv'){
+          if( id == 3)
+            sql = `select * from customer where trangthai = 0` ;
+        else if(id == 2)
+          sql = `select * from customer where trangthai = 2` 
+        else 
+         sql = `select * from customer where trangthai = 1` 
+  } }
+   else if(req.session.user.access == 2){
+    if(loai == 'cv'){
+      if( id == 1)
+        sql = `select * from customer where trangthai = 0`
+    else if(id == 2) 
+      sql = `select * from customer where trangthai = 1` 
+  }
   } 
+  db.query(sql,(err,data)=>{
+    if(err) throw err;
+    data1 = data
+    //res.send(data)
+    res.render('manager.ejs',{id:id,loai:loai,data:data});
+  } )
+}
 });
 router.get('/manager/:id', function(req, res, next) {
   if (req.session.user) {
@@ -77,5 +101,11 @@ router.get('/login', function(req, res, next) {
     res.redirect('http://localhost:3000/');
   }
 });
+router.get('/logout',(req,res)=>{
+  if(req.session.user){
+    req.session.destroy()
+    res.redirect('http://localhost:3000/')
+  }
+})
 
 module.exports = router;
