@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const session = require('express-session');
+const moment = require('moment');
 function User(username, password,access,name, img) {
   this.username = username;
   this.password = password;
@@ -69,7 +70,21 @@ router.get('/manager', function(req, res, next) {
           sql = `select * from customer where trangthai = 2` 
         else 
          sql = `select * from customer where trangthai = 1` 
-  } }
+  }
+   if(loai == 'nv') {
+      if(id == 1){
+        sql = `SELECT * FROM user JOIN access ON user.quyen = access.id WHERE id <> 1` 
+      }
+      else if(id == 2) {
+        sql = `SELECT * FROM user JOIN access ON user.quyen = access.id where quyen = 3` 
+      }
+      else if(id == 3) {
+        sql = `SELECT * FROM user JOIN access ON user.quyen = access.id where quyen = 2` 
+      }
+  }
+
+
+}
    else if(req.session.user.access == 2){
     if(loai == 'cv'){
       if( id == 1)
@@ -81,6 +96,11 @@ router.get('/manager', function(req, res, next) {
   db.query(sql,(err,data)=>{
     if(err) throw err;
     data1 = data
+    if(data.length !=0){
+      for(let e of data){
+        e.ngaysinh = moment(e.ngaysinh).format('DD-MM-YYYY')
+      }
+    }
     //res.send(data)
     res.render('manager.ejs',{id:id,loai:loai,data:data});
   } )
