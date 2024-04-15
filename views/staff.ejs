@@ -13,102 +13,20 @@
     <script src="https://cdn.datatables.net/2.0.3/js/dataTables.bootstrap5.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.bootstrap5.css">
-    <!-- <script>
+    <script>
       $(document).ready(function (){
         $('#example').DataTable();
       });
-    </script> -->
+    </script>
+        <style>
+          .inputImg{
+            display: none;
+          }
+        </style>
     
 </head>
 <body>
-  <!-- <div style="width: 100%; display: flex; margin-right: 0px;">
-    <div class="tb" style="flex-grow: 1; flex-basis: 70%; margin: 0; padding: 0"> 
-      <h2 style="text-align: center; margin: 50px;">Danh Sách Nhân Viên</h2>
-      
-      <table id="example" class="table table-striped table-hover" >
-        <thead>
-          <tr>
-              <th>name</th>
-              <th>Phone</th>
-              <th>birthday</th>
-              <th> address</th>
-              
-              <th>Select</th> 
-          </tr>
-        </thead>
-      <tbody>
-        <% if(data.length !=0){ %>
-          <% for(let e of data) { %>
-            <tr>
-              <td><%= e.name %></td>
-              <td><%= e.phone %></td>
-              <td><%= e.ngaysinh %></td>
-              <td> <%= e.address %></td>
-             
-              <td>
-                <a href="#" style="color: red; text-decoration: none;">Xóa</a>
-              </td>
-          </tr>
-            
-
-       <% } } %>
-         
-      </table>
-    </div>
-    <div class="frm" style="flex-grow: 1; margin: 0; padding: 0">
-      <form style="margin-right: 0px; margin-left: 5px;">
-        <div class="mb-2">
-          <h2 style="text-align: center;">FORM</h2>
-        </div>
-        <div class="mb-2">
-          <label for="username" class="form-label">Username</label>
-          <input type="email" class="form-control" id="username" aria-describedby="emailHelp">                  
-        </div>
-        <div class="mb-3">
-          <label for="exampleInputPassword1" class="form-label">Password</label>
-          <input type="password" class="form-control" id="exampleInputPassword1">
-        </div>
-        <div class="mb-3 d-flex">
-          <label for="exampleInputPassword1" class="form-label">Quyền</label>
-          <div style="margin-left: 100px;">
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="rd1" value="option1">
-              <label class="form-check-label radio-label" for="rd1">Staff</label>
-            </div>
-            <div class="form-check form-check-inline" style="margin-left: 100px;">
-              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="rd2" value="option2">
-              <label class="form-check-label" for="rd2">Saler</label>
-            </div>
-          </div>
-        </div>
-        <div class="mb-2">
-          <label for="exampleInputPassword1" class="form-label">Họ và tên</label>
-          <input type="password" class="form-control" id="exampleInputPassword1">
-        </div>
-        <div class="mb-2">
-          <label for="exampleInputPassword1" class="form-label">Số điện thoại</label>
-          <input type="password" class="form-control" id="exampleInputPassword1">
-        </div>
-        <div class="mb-2">
-          <label for="exampleInputPassword1" class="form-label">Ngày sinh</label>
-          <input type="password" class="form-control" id="exampleInputPassword1">
-        </div>
-        <div class="mb-4">
-          <label for="exampleInputPassword1" class="form-label">Ảnh đại diện</label>
-          <div class="input-group">
-            <input type="password" class="form-control" id="exampleInputPassword1">
-            <div class="input-group-append">
-              <button class="btn btn-outline-secondary" type="button">Tải ảnh</button>
-            </div>
-          </div>
-        </div>            
-        <div class="d-flex justify-content-center">
-          <input type="submit" class="btn btn-primary mx-2" value="Thêm">
-          <input type="submit" class="btn btn-primary mx-2" value="Sửa">
-        </div>            
-      </form>
-    </div>
-  </div> -->
+ 
 
 
 
@@ -153,24 +71,21 @@
       </div>
  <% } } else if(loai == 'nv'){ %>
   <div class="tb" style="flex-grow: 1; flex-basis: 70%; margin: 0; padding: 0"> 
-    <h2 style="text-align: center; margin: 50px;">Danh Sách nhân viên</h2>
+    <h2 style="text-align: center; margin: 50px;" >Danh Sách nhân viên</h2>
+    <button class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#exampleModal">Thêm nhân viên</button>
+    <!-- <a href="#" class="btn btn-primary position-absolute bottom-1 mb-2" data-bs-toggle="modal" data-bs-target="#exampleModal">Thêm nhân viên</a> -->
     <!-- đổ dữ liệu lên -->
     <table id="example" class="table table-striped table-hover" >
       <thead>
         <tr>
-            <th>username</th>
-            <th>password</th>
-            <th>tên</th>
-            <th> chức vụ</th>
-            <th>địa chỉ</th>
-            <th>số điện thoại</th>
-            <th>ngày sinh</th>
-            <th>ảnh</th>
-            <!-- <th>Name</th>
-            
-            <th>Dob</th>
-            <th>Image</th>-->
-           
+            <th>Username</th>
+            <th>Password</th>
+            <th>Tên</th>
+            <th>Chức vụ</th>
+            <th>Địa chỉ</th>
+            <th>Số điện thoại</th>
+            <th>Ngày sinh</th>
+            <th>Ảnh</th>          
             <th>Select</th> 
         </tr>
       </thead>
@@ -184,15 +99,20 @@
             <td> <%= e.namecv %></td>
             <td> <%= e.diachi %></td>
             <td> <%= e.sdt %></td>
-            <td> <%= e.ngaysinh %></td>
-            <td> <img src="<%= e.img %>" width="10px" height="10px"></td>
+            <td> <%= e.ngaysinh %></td>          
+            <td> <img src="<%= e.img %>" width="40px" height="30px" alt="Ko có ảnh"></td>
             <td>
-              <a href="#" style="color: red; text-decoration: none;">Chỉnh sửa</a> |
-              <a href="#" style="color: red; text-decoration: none;">Xóa</a>
+              <a href="/users/sua/<%= e.username %>"  style="color: red; text-decoration: none;">Chỉnh sửa</a> |
+              <% if (id == 1) {%>              
+                <a href="/users/xoa/<%= e.username%>?page=1&loai=nv"  style="color: red; text-decoration: none;">Xóa</a>
+                <% } else  if(id ==2 ) { %>                  
+                  <a href="/users/xoa/<%= e.username%>?page=2&loai=nv"  style="color: red; text-decoration: none;">Xóa</a>
+                <% } else  if (id == 3 ) { %>                   
+                  <a href="/users/xoa/<%= e.username%>?page=3&loai=nv"  style="color: red; text-decoration: none;">Xóa</a>
+                <%  
+              } %>
             </td>
-        </tr>
-          
-
+        </tr>        
      <% } } %>
        
     </table>
@@ -202,99 +122,130 @@
 
 }%>
 
+<!-- Modal Thêm Nhân Viên-->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Thêm nhân viên</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="myForm" action="/users/nhanvien" method="POST">
+          <div class="mb-2">
+            <label for="username" class="form-label">Username</label>
+            <input type="email" class="form-control" name="username" id="username" aria-describedby="emailHelp">                  
+          </div>
+          <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Password</label>
+            <input type="password" class="form-control" name="passwork">
+          </div>
+          <div class="mb-3 d-flex">
+            <label for="exampleInputPassword1" class="form-label">Quyền</label>
+            <div style="margin-left: 100px;">
+              <% if (loai == 'nv') {%>
+                <% if (id == 1) {%>
 
-
-
-  <!-- <div class="container-fluid" style="width: 80%;"> 
-          
-    <div class="row " style="width: 100%;">
-        <div class="col-8" style="width:50%">
-            <h2 style="text-align: center; margin: 50px;">Danh Sách Nhân Viên</h2>
-            <table id="example" class="table table-striped table-hover" >
-            
-              <thead>
-                  <tr>
-                      <th>Username</th>
-                      <th>Password</th>
-                      <th>Permission</th>
-                      <th>Name</th>
-                      <th>Phone</th>
-                      <th>Dob</th>
-                      <th>Image</th>
-                      <th>Select</th>
-                  </tr>
-              </thead>
-              <tbody>
-                  <tr>
-                      <td>Tiger Nixon</td>
-                      <td>System Architect</td>
-                      <td>Edinburgh</td>
-                      <td>61</td>
-                      <td>2011-04-25</td>
-                      <td>$320,800</td>
-                      <td>2011-04-25</td>
-                      <td>
-                        <a href="#" style="color: red; text-decoration: none;">Xóa</a>
-                      </td>
-                  </tr>
-          </table>
-        </div>
-        
-        <div class="col-4" style="width:50%; margin-right: 0px;">
-        
-          <form>
-            <div class="mb-2">
-              <h2 style="text-align: center;">FORM</h2>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="quyen" id="rd1" value="3">
+                    <label class="form-check-label radio-label" for="rd1">Staff</label>
+                  </div>
+                  <div class="form-check form-check-inline" style="margin-left: 100px;">
+                    <input class="form-check-input" type="radio" name="quyen" id="rd2" value="2">
+                    <label class="form-check-label" for="rd2">Saler</label>
+                  </div>
+                <% } else  if(id ==2 ) { %>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="quyen" id="rd1" value="3" checked>
+                    <label class="form-check-label radio-label" for="rd1">Staff</label>
+                  </div>
+                  <div class="form-check form-check-inline" style="margin-left: 100px;">
+                    <input class="form-check-input" type="radio" name="quyen" id="rd2" value="2" disabled>
+                    <label class="form-check-label" for="rd2">Saler</label>
+                  </div>
+                <% } else  if (id == 3 ) { %> 
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="quyen" id="rd1" value="3" disabled>
+                    <label class="form-check-label radio-label" for="rd1">Staff</label>
+                  </div>
+                  <div class="form-check form-check-inline" style="margin-left: 100px;">
+                    <input class="form-check-input" type="radio" name="quyen" id="rd2" value="2" checked>
+                    <label class="form-check-label" for="rd2">Saler</label>
+                  </div>
+                <% } 
+              } %>
             </div>
-            <div class="mb-2">
-              <label for="username" class="form-label">Username</label>
-              <input type="email" class="form-control" id="username" aria-describedby="emailHelp">                  
+          </div>
+          <div class="mb-2">
+            <label for="exampleInputPassword1" class="form-label">Họ và tên</label>
+            <input type="text" class="form-control" name="name">
+          </div>
+          <div class="mb-2">
+            <label for="exampleInputPassword1" class="form-label">Số điện thoại</label>
+            <input type="tel" class="form-control" name="sdt">
+          </div>
+          <div class="mb-2">
+            <label for="exampleInputPassword1" class="form-label">Ngày sinh</label>
+            <input type="date" class="form-control" name="ngaysinh">
+          </div>
+          <div class="mb-2">
+            <label for="exampleInputPassword1" class="form-label">Địa chỉ</label>
+            <input type="text" class="form-control" name="diachi">
+          </div>
+          <div class="mb-4">
+            <label for="exampleInputPassword1" class="form-label">Ảnh đại diện</label>
+            <div class="input-group">
+              <input type="text" class="form-control" name="img">
+              <div class="input-group-append">
+                <label for="input-img" class="btn btn-outline-secondary">Tải ảnh</label>
+                <input id="input-img" class="inputImg" type="file" accept="image/jpeg, image/png, image/jpg">
+              </div>                 
             </div>
-            <div class="mb-3">
-              <label for="exampleInputPassword1" class="form-label">Password</label>
-              <input type="password" class="form-control" id="exampleInputPassword1">
-            </div>
-            <div class="mb-3 d-flex">
-              <label for="exampleInputPassword1" class="form-label">Quyền</label>
-              <div style="margin-left: 100px;">
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="rd1" value="option1">
-                  <label class="form-check-label radio-label" for="rd1">Staff</label>
-                </div>
-                <div class="form-check form-check-inline" style="margin-left: 100px;">
-                  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="rd2" value="option2">
-                  <label class="form-check-label" for="rd2">Saler</label>
-                </div>
-              </div>
-            </div>
-            <div class="mb-2">
-              <label for="exampleInputPassword1" class="form-label">Họ và tên</label>
-              <input type="password" class="form-control" id="exampleInputPassword1">
-            </div>
-            <div class="mb-2">
-              <label for="exampleInputPassword1" class="form-label">Số điện thoại</label>
-              <input type="password" class="form-control" id="exampleInputPassword1">
-            </div>
-            <div class="mb-2">
-              <label for="exampleInputPassword1" class="form-label">Ngày sinh</label>
-              <input type="password" class="form-control" id="exampleInputPassword1">
-            </div>
-            <div class="mb-4">
-              <label for="exampleInputPassword1" class="form-label">Ảnh đại diện</label>
-              <div class="input-group">
-                <input type="password" class="form-control" id="exampleInputPassword1">
-                <div class="input-group-append">
-                  <button class="btn btn-outline-secondary" type="button">Tải ảnh</button>
-                </div>
-              </div>
-            </div>            
-            <div class="d-flex justify-content-center">
-              <input type="submit" class="btn btn-primary mx-2" value="Thêm">
-              <input type="submit" class="btn btn-primary mx-2" value="Sửa">
-            </div>            
-          </form>
-        </div>
+            <img id="img-preview" src="" alt="Ảnh đại diện" style="max-width: 300px;">
+          </div>                
+          <div class="d-flex justify-content-center">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            <input type="submit" class="btn btn-primary mx-2" value="Thêm">            
+          </div>       
+        </form>
+      </div>
     </div>
-  </div> -->
+  </div>
+</div>
+
+<!-- update -->
+
 </body>
 </html>
+
+<script>
+
+document.getElementById('input-img').addEventListener('change', function(e) {
+  var file = e.target.files[0];
+  var reader = new FileReader();
+
+  reader.onload = function(e) {
+    var imgValue = e.target.result;
+    document.getElementById('img-preview').src = imgValue;
+
+    // Tạo FormData object
+    var formData = new FormData();
+    formData.append('img', file); // Thêm ảnh vào FormData
+
+    // Gửi yêu cầu AJAX để tải ảnh lên server
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/users/uploadImage', true);
+    xhr.onload = function() {
+      if (xhr.status === 200) {
+        // Lấy đường dẫn của ảnh đã tải lên từ phản hồi
+        var imagePath = xhr.responseText;
+        document.getElementsByName('img')[0].value = imagePath;
+      }
+    };
+    xhr.send(formData);
+  };
+
+  reader.readAsDataURL(file);
+});
+
+</script>

@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 const session = require('express-session');
 const moment = require('moment');
+const multer = require('multer');
+
 function User(username, password,access,name, img) {
   this.username = username;
   this.password = password;
@@ -10,6 +12,7 @@ function User(username, password,access,name, img) {
   this.img   = img;
 }
 var db=require('../model/connectdb');
+var temp = null;
 // router.use(session({
 //   secret: 'mySecret', // Key bí mật để mã hóa session (có thể được thay đổi)
 //   resave: false,
@@ -55,6 +58,88 @@ router.post('/login', function(req, res, next) {
      })
   } 
 });
+
+//Thêm nhân viên
+router.post('/nhanvien', function(req, res, next) {
+  var a = req.body
+  var sql = `insert into user(username, passwork, quyen, name, diachi, sdt, ngaysinh, img ) values("${a.username}", "${a.passwork}",${a.quyen}, "${a.name}","${a.diachi}","${a.sdt}","${a.ngaysinh}","${a.img}")`
+  db.query(sql,function(err,result){
+    if (err) {
+      console.error('Error executing query: ' + err.stack);
+      // Hiển thị thông báo cảnh báo nếu có lỗi
+      res.send("Lỗi do nhập thông tin Email chưa chính xác!")
+
+      return;
+    }
+    res.redirect("http://localhost:3000/users/manager?page=1&loai=nv")
+  })
+});
+//Xóa nhân viên
+router.get('/xoa/:id', function(req, res, next) {
+  var page = req.query['page'];
+  var loai = req.query['loai'];
+  var sql = `delete from user where username="${req.params.id}"`;
+  db.query(sql, function(err, result) {
+    if (err) throw err;
+    res.redirect(`http://localhost:3000/users/manager?page=${page}&loai=${loai}`);    
+  });
+});
+
+// Sửa nhân viên
+router.get('/sua/:id', function(req, res, next) {
+  var id = req.params.id;
+  //res.send(id)
+   var sql = `select * from user where username = '${id}'`
+  
+   db.query(sql, (err,data)=>{
+    temp = data
+    res.redirect('/users/updateNV')
+   // res.render('udateNV.ejs',{data : data});
+   })
+});
+router.get('/updateNV', function(req, res, next) {
+  if(temp != null) {
+    res.render('udateNV.ejs',{data : temp});
+  }
+  else res.send("không có dữ liệu")
+});
+
+//Lưu ảnh
+
+const storage = multer.diskStorage({
+  destination: function(req, file, cb) {
+    cb(null, './public/images');
+  },
+  filename: function(req, file, cb) {
+    cb(null, `${Date.now()}_${file.originalname}`);
+  }
+});
+
+const upload = multer({ storage });
+
+// Tuyến đường để tải ảnh lên server
+router.post('/uploadImage', upload.single('img'), function(req, res, next) {
+  if (!req.file) {
+    return res.status(400).send('No file uploaded.');
+  }
+  // Lấy đường dẫn của ảnh đã tải lên
+  var imagePath = '/images/' + req.file.filename;
+  // Trả về đường dẫn của ảnh đã tải lên để sử dụng trong mã JavaScript
+  res.send(imagePath);
+});
+
+router.post('/update', function(req, res, next) {
+  var a = req.body;
+  var sql = `UPDATE user SET username = "${a.username}", passwork = "${a.passwork}", quyen = ${a.quyen}, name = "${a.name}", diachi = "${a.diachi}", sdt = "${a.sdt}", ngaysinh = "${a.ngaysinh}", img = "${a.img}" WHERE username = '${a.username}'`;
+  
+  db.query(sql, function(err, result) {
+    if (err) throw err;
+    res.redirect("http://localhost:3000/users/manager?page=1&loai=nv");
+  });
+});
+
+
+
 router.get('/manager', function(req, res, next) {
   if (req.session.user) {
     var id = req.query['page']

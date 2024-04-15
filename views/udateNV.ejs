@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Nhân Viên</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.bootstrap5.css">
+    <style>
+      .inputImg{
+        display: none;
+      }
+    </style>
+</head>
+<body>
+    <div class="col-lg-6 offset-lg-3 ">
+        <h4 style="text-align: center;" >Cập nhật nhân viên</h4>
+    <% if(data.length !=0){ %>
+        <% for(let e of data) { %>
+    <form id="myForm" action="/users/update" method="POST">
+        <div class="mb-2">
+          <label for="username" class="form-label">Username</label>
+          <input type="email" class="form-control" name="username" id="username" aria-describedby="emailHelp" value="<%= e.username %>" readonly>                  
+        </div>
+        <div class="mb-3">
+          <label for="exampleInputPassword1" class="form-label">Password</label>
+          <input type="password" class="form-control" name="passwork"   value="<%= e.passwork %>" >
+        </div>
+        <div class="mb-3 d-flex">
+            <label for="exampleInputPassword1" class="form-label">Quyền</label>
+        <% if(e.quyen==2){ %>              
+          <div style="margin-left: 100px;">
+           
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="quyen" id="rd1" value="3">
+                  <label class="form-check-label radio-label" for="rd1">Staff</label>
+                </div>
+                <div class="form-check form-check-inline" style="margin-left: 100px;">
+                  <input class="form-check-input" type="radio" name="quyen" id="rd2" value="2" checked>
+                  <label class="form-check-label" for="rd2">Saler</label>
+                </div>              
+          </div>
+        
+        <% } else if(e.quyen==3){ %>                    
+                <div style="margin-left: 100px;">
+                 
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="quyen" id="rd1" value="3" checked>
+                        <label class="form-check-label radio-label" for="rd1">Staff</label>
+                      </div>
+                      <div class="form-check form-check-inline" style="margin-left: 100px;">
+                        <input class="form-check-input" type="radio" name="quyen" id="rd2" value="2" >
+                        <label class="form-check-label" for="rd2">Saler</label>
+                      </div>              
+                </div>              
+        <% } %>       
+    </div>
+        <div class="mb-2">
+          <label for="exampleInputPassword1" class="form-label">Họ và tên</label>
+          <input type="text" class="form-control" name="name"  value="<%= e.name %>">
+        </div>
+        <div class="mb-2">
+          <label for="exampleInputPassword1" class="form-label">Số điện thoại</label>
+          <input type="tel" class="form-control" name="sdt"  value="<%= e.sdt %>">
+        </div>
+        <div class="mb-2">
+          <label for="exampleInputPassword1" class="form-label">Ngày sinh</label>
+          <% if (e.ngaysinh && Object.prototype.toString.call(e.ngaysinh) === '[object Date]' && !isNaN(e.ngaysinh.getTime())) { %>
+            <input type="date" class="form-control" name="ngaysinh" value="<%= e.ngaysinh.toISOString().split('T')[0] %>">
+          <% } else { %>
+            <input type="date" class="form-control" name="ngaysinh" value="">
+          <% } %>
+        </div>
+        <div class="mb-2">
+          <label for="exampleInputPassword1" class="form-label">Địa chỉ</label>
+          <input type="text" class="form-control" name="diachi"  value="<%= e.diachi %>">
+        </div>
+        <div class="mb-4">
+          <label for="exampleInputPassword1" class="form-label">Ảnh đại diện</label>
+          <div class="input-group">
+            <div class="mb-2">              
+              <% if (e.img.includes('/images/')) { %>
+                <input type="text" class="form-control" name="img" value="<%= e.img %>">
+              <% } else { %>
+                <input type="text" class="form-control" name="img" value="/images/<%= e.img %>">
+              <% } %>
+            </div>
+            <div class="input-group-append">
+              <label for="input-img" class="btn btn-outline-secondary">Tải ảnh</label>
+              <input id="input-img" class="inputImg" type="file" accept="image/jpeg, image/png, image/jpg">
+            </div>            
+          </div>
+          <img id="img-preview" src="" alt="Ảnh đại diện" style="max-width: 300px;">
+        </div>                
+        <div class="d-flex justify-content-center">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick = "dongform()">Đóng</button>
+          <input type="submit" class="btn btn-primary mx-2" value="Cập nhật">            
+        </div>       
+      </form>
+      <% } } %>
+    </div>
+</body>
+</html>
+<script>
+    function dongform(){
+        window.location.href = 'http://localhost:3000/users/manager?page=1&loai=nv';
+    }
+
+  // document.getElementById('input-img').addEventListener('change', function(e) {
+  //   var file = e.target.files[0];
+  //   var reader = new FileReader();
+
+  //   reader.onload = function(e) {
+  //     var imgValue = e.target.result;
+  //     document.getElementById('img-preview').src = imgValue;
+
+  //     // Lấy tên tệp từ đường dẫn
+  //     var filename = document.getElementById('input-img').files[0].name;
+  //     var customPath =  filename; // Đường dẫn tùy chỉnh
+  //     document.getElementsByName('img')[0].value = customPath;
+  //   };
+
+  //   reader.readAsDataURL(file);
+  // });
+
+  document.getElementById('input-img').addEventListener('change', function(e) {
+    var file = e.target.files[0];
+    var reader = new FileReader();
+
+    reader.onload = function(e) {
+      var imgValue = e.target.result;
+      document.getElementById('img-preview').src = imgValue;
+
+      // Tạo FormData object
+      var formData = new FormData();
+      formData.append('img', file); // Thêm ảnh vào FormData
+
+      // Gửi yêu cầu AJAX để tải ảnh lên server
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', '/users/uploadImage', true);
+      xhr.onload = function() {
+        if (xhr.status === 200) {
+          // Lấy đường dẫn của ảnh đã tải lên từ phản hồi
+          var imagePath = xhr.responseText;
+          document.getElementsByName('img')[0].value = imagePath;
+        }
+      };
+      xhr.send(formData);
+    };
+
+    reader.readAsDataURL(file);
+  });
+
+</script>
