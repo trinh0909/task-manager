@@ -18,71 +18,182 @@
         $('#example').DataTable();
       });
     </script>
+    <style>
+      .clickhover:hover{
+        cursor: pointer;
+      }
+    </style>
 </head>
 <body>
-  <div class="container-fluid">        
-    <div class="row">
-        <div class="col-7">
-            <h2 style="text-align: center; margin: 50px;">Danh Sách Khách Hàng</h2>
-            <table id="example" class="table table-striped table-hover" style="width:100%">
-              <thead>
-                  <tr>
-                      <th>Id</th>
-                      <th>Name</th>
-                      <th>Phone</th>
-                      <th>Dob</th>
-                      <th>Address</th>
-                      <th>Trạng Thái</th>
-                      <th>Select</th>
-                  </tr>
-              </thead>
-              <tbody>
-                  <tr>
-                      <td>Tiger Nixon</td>
-                      <td>System Architect</td>
-                      <td>Edinburgh</td>
-                      <td>61</td>
-                      <td>2011-04-25</td>
-                      <td>$320,800</td>
-                      <td>
-                        <a href="#" style="color: red; text-decoration: none;">Xóa</a>
-                      </td>
-                  </tr>
-          </table>
+  <% if(session.user.access == 2) { %>
+    <%  if(loai == "cv" ){ %>
+        <% if(id == 1) { %>
+          
+          <div class="container-fluid">        
+            <div class="row">
+                <div class="col-7">
+                    <h2 style="text-align: center; margin: 50px;">Danh Sách Khách Hàng</h2>
+                    <table id="example" class="table table-striped table-hover" style="width:100%">
+                      <thead>
+                          <tr>
+                              <!-- <th>Id</th> -->
+                              <th>Name</th>
+                              <th>Phone</th>
+                              <!-- <th>Dob</th> -->
+                              <th>Address</th>
+                              <th>Order</th>
+                              
+                          </tr>
+                      </thead>
+                      <tbody>
+                         <% for(var e of data){ %>
+
+                          <tr class = "clickhover" onclick="udateKH('<%= e.id %>', '<%= e.name %>', '<%= e.phone %>','<%= e.address %>','<%= e.order %>')">
+                            <!-- <td>Tiger Nixon</td> -->
+                            <td><%= e.name %></td>
+                            <td><%= e.phone %></td>
+                            <td><%= e.address %></td>
+                            <td><%= e.order %></td>
+                            <!-- <td>$320,800</td> -->
+                            <!-- <td>
+                              <a href="#" style="color: red; text-decoration: none;">Xóa</a>
+                            </td> -->
+                        </tr>
+                         <% } %>
+                  </table>
+                </div>
+                
+                <div class="col-5">
+                  <form action="/project/" method="post">
+                    <div class="mb-2">
+                      <h2 style="text-align: center;">FORM</h2>
+                    </div>
+                    <div class="mb-2">
+                      <label for="username" class="form-label">Họ và tên</label>
+                      <input type="text" name = 'namepj' class="form-control" id="name" aria-describedby="emailHelp">                  
+                    </div>
+                    <div class="mb-3">
+                      <label for="exampleInputPassword1" class="form-label">Số điện thoại </label>
+                      <input type="text" class="form-control" id="phone" name = "phonerj">
+                    </div>            
+                    <input type="hidden" class="form-control" name = "id" id="id" >
+                    <!-- <div class="mb-2">
+                      <label for="exampleInputPassword1" class="form-label">Địa chỉ</label>
+                      <input type="text" class="form-control" id="date">
+                    </div> -->
+                    <div class="mb-2">
+                      <label for="exampleInputPassword1" class="form-label">Địa chỉ</label>
+                      <input type="text" class="form-control" id="address" name = "addresspj">
+                    </div>
+                    <div class="mb-2">
+                      <label for="exampleInputPassword1" class="form-label">Order</label>
+                      <input type="text" class="form-control" id="order" name = "orderpj">
+                    </div>
+                    <div class="mb-2">
+                      <label for="exampleInputPassword1" class="form-label"  >Ngày bắt đầu</label>
+                      <input type="date" class="form-control" id = "ngayBD" onchange="validateDate(this)" name ="ngayBD">
+                    </div>
+                    <div class="mb-2">
+                      <label for="exampleInputPassword1" class="form-label"  placeholder="">Ngày Kết thúc</label>
+                      <input type="date" class="form-control" id = "ngayKT" name="ngayKT" onchange="validateDate(this)">
+                    </div>
+                    <div class="mb-2">
+                      <label for="exampleInputPassword1" class="form-label">Thêm mô tả</label>
+                      <input type="text" class="form-control" id="mota" name = "motapj">
+                    </div>                    
+                    <div class="d-flex justify-content-center">
+                      <input type="submit" class="btn btn-primary mx-2" value="Tạo dự án" onclick="return confirmSubmit()">
+                      <!-- <input type="submit" class="btn btn-primary mx-2" value="Sửa"> -->
+                    </div>            
+                  </form>
+                </div>
+            </div>
+          </div>
+
+      <%  } if(id == 2) { %>
+        <div class="container-fluid" style="width: 100%;">        
+          <div class="row" style="width: 100%;">
+              <div class="col-7">
+                  <h2 style="text-align: center; margin: 50px;">Danh Sách Khách Hàng</h2>
+                  <table id="example" class="table table-striped table-hover" style="width:100%">
+                    <thead>
+                        <tr>
+                            <!-- <th>Id</th> -->
+                            <th>Tên công việc</th>
+                            <th>Tên khách hàng</th>
+                            <!-- <th>Dob</th> -->
+                            <th>ngày bắt đầu</th>
+                            <th>ngày kết thúc</th>
+                            <th>Mô Tả</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                       <% for(var e of data){ %>
+
+                        <tr>
+                          <!-- <td>Tiger Nixon</td> -->
+                          <td><%= e.namePJ %></td>
+                          <td><%= e.name %></td>
+                          <td><%= e.ngayBD %></td>
+                          <td><%= e.ngayKT %></td>
+                          <td><%= e.description %></td>
+                          <!-- <td>$320,800</td> -->
+                          <!-- <td>
+                            <a href="#" style="color: red; text-decoration: none;">Xóa</a>
+                          </td> -->
+                      </tr>
+                       <% } %>
+                </table>
+              </div>
+              
+             
+          </div>
         </div>
-        
-        <div class="col-5">
-          <form>
-            <div class="mb-2">
-              <h2 style="text-align: center;">FORM</h2>
-            </div>
-            <div class="mb-2">
-              <label for="username" class="form-label">Họ và tên</label>
-              <input type="email" class="form-control" id="username" aria-describedby="emailHelp">                  
-            </div>
-            <div class="mb-3">
-              <label for="exampleInputPassword1" class="form-label">Số điện thoại </label>
-              <input type="password" class="form-control" id="exampleInputPassword1">
-            </div>            
-            <div class="mb-2">
-              <label for="exampleInputPassword1" class="form-label">Ngày sinh</label>
-              <input type="password" class="form-control" id="exampleInputPassword1">
-            </div>
-            <div class="mb-2">
-              <label for="exampleInputPassword1" class="form-label">Địa chỉ</label>
-              <input type="password" class="form-control" id="exampleInputPassword1">
-            </div>
-            <div class="mb-2">
-              <label for="exampleInputPassword1" class="form-label">Người liên hệ</label>
-              <input type="password" class="form-control" id="exampleInputPassword1">
-            </div>                    
-            <div class="d-flex justify-content-center">
-              <input type="submit" class="btn btn-primary mx-2" value="Thêm">
-              <input type="submit" class="btn btn-primary mx-2" value="Sửa">
-            </div>            
-          </form>
-        </div>
-    </div>
-  </div>
+      
+      <% }
+
+      }
+  } %>
+ 
 </body>
 </html>
+<script>
+   function validateDate(a) {
+   // alert(a.name);
+          if(a.id == "ngayBD")
+           {
+            var selectedDate = new Date(document.getElementById(a.id).value);
+            var currentDate = new Date();
+           }
+          else {
+            var selectedDate = new Date(document.getElementById(a.id).value);
+          var currentDate = new Date(document.getElementById('ngayBD').value);
+          }
+           // alert(currentDate)
+
+            if (selectedDate <= currentDate) {
+              alert("ngày bắt đầu không được nhỏ hơn ngày hiện tại và ngày kết thúc không được nhỏ hơn ngày bắt đầu")
+                // document.getElementById("error-message").textContent = "Ngày phải lớn hơn ngày hiện tại. Vui lòng chọn lại.";
+                 document.getElementById(a.id).value = ""; // Xóa giá trị ngày không hợp lệ
+            } 
+        }
+  function udateKH(id,name,phone,address,order){
+    document.getElementById('id').value = id
+    document.getElementById('name').value = name
+    document.getElementById('phone').value = phone
+    document.getElementById('address').value = address
+    document.getElementById('order').value = order
+    
+  }
+
+  function confirmSubmit() {
+    var confirmation = confirm("Bạn có chắc muốn submit form không?");
+    if (confirmation) {
+        return true;
+    } 
+    else {
+        return false;
+    }
+}
+</script>

@@ -112,6 +112,7 @@
           
           }%>
             </div>
+            <i class="fa-solid fa-bell"></i>
           </div>
         </div>
       </div>
@@ -161,6 +162,9 @@
       <div style="margin-left: 21%; width: 80%; margin-top: 10px;">
         <%- include('job.ejs') %>
         <%- include('staff.ejs') %>
+        <% if(session.user.access == 2) { %>
+          <%- include('customer.ejs') %>
+        <% } %>
       </div>      
 
      

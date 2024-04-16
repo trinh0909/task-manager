@@ -167,6 +167,14 @@ router.get('/manager', function(req, res, next) {
         sql = `SELECT * FROM user JOIN access ON user.quyen = access.id where quyen = 2` 
       }
   }
+  else if(loai == 'tt'){
+    if(req.session.user){
+      var username = req.session.user.username
+      sql = `select * from user where username = '${username}'`
+    }
+   
+  }
+
 
 
 }
@@ -176,8 +184,11 @@ router.get('/manager', function(req, res, next) {
     if(loai == 'cv'){
       if( id == 1)
         sql = `select * from customer where trangthai = 0`
-    else if(id == 2) 
-      sql = `select * from customer where trangthai = 1` 
+      else if(id == 2) {
+        var username = req.session.user.username
+        sql = `SELECT * FROM projects JOIN customer ON projects.id_customer = customer.id  where projects.id_user = '${username}'` 
+        
+      }
   }
   } 
 

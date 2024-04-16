@@ -52,7 +52,7 @@
                         <p class="text-right">Chưa giao</p>  
                     </div>             
                     <div class="card-body  custom-card-body">
-                      <h4 class="card-title"><%= i.name %></h4>
+                      <h4 class="card-title"><%= i.namePJ %></h4>
                       <div class="card-time">
                         <p class="card-text">start: <%= i.ngayBD %></p>
                        
@@ -66,11 +66,17 @@
                             <!-- <p class="card-text">Người làm công việc:</p>         
                             <p class="card-text ">Không có</p> -->
                           </div>  
-                      <a href="#" class="btn btn-primary position-absolute bottom-1 mb-2">Giao công việc</a>
+                          <input type="button" data-bs-toggle="modal" data-bs-target="#exampleModal"  class="btn btn-primary position-absolute bottom-1 mb-2" onclick="datajob('<%= i.namePJ %>', '<%= i.ngayBD %>','<%= i.ngayKT %>','<%= i.description %>')" value="Giao công việc">
                     </div>
                   </div>
-            
+
+                
     <%} } %>
 </div>
 </body>
 </html>
+<script>
+    function datajob( name,  ngayBD, ngayKT, description){
+            alert(name)
+    }
+</script>
