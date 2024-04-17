@@ -160,6 +160,9 @@
 
       <div style="margin-left: 20%; width: 80%;">
         <%- include('staff.ejs') %>
+        <% if (loai == 'tt') { %>
+          <%- include('profile.ejs') %>
+        <% } %>
       </div>      
 
      

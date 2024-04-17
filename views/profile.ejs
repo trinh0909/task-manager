@@ -29,65 +29,108 @@
             background-color: #f8f9fa; /* Màu nền của card dự án */
             padding: 20px; /* Khoảng cách bên trong card dự án */
             margin-top: 40px; /* Khoảng cách giữa form và card dự án */
-        }
+        } 
+        /* #myDiv {
+        display: none;
+        } */
+        .inputImg1{
+            display: none;
+          }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="row">
+            <% if(session.user.access == 1){ %>
+                <% if(loai =='tt'){ %> 
+                    <% if(data.length !=0){ %>
+                        <% for(let e of data) { %>
             <h2 class="text-center">Thông tin cá nhân</h2>
             <!-- Đây là nội dung card -->
             <div class="col-md-4">
                 <div class="card">
-                    <div class="d-flex align-items-center justify-content-center">
-                        <img src="../public/images/meo.jpg" class="card-img-top rounded-circle profile-image" alt="Avatar">
+                    <div class="d-flex align-items-center justify-content-center">                        
+                        <img id="img-preview1" src="<%= e.img %>" class="card-img-top rounded-circle profile-image" alt="Avatar">
                     </div>                
                     <div class="card-body  text-center">
-                        <h5 class="card-title">John Doe</h5>
-                        <p class="card-text">Username: johndoe</p>
-                        <button class="btn btn-primary">Change Avatar</button>
+                        <h5 class="card-title" > <%= e.name %> </h5>
+                        <p class="card-text"><%= e.username %></p> 
+                        <div class="mb-2">              
+                            <% if (e.img.includes('/images/')) { %>
+                              <input type="text" class="form-control" name="img1" value="<%= e.img %>">
+                            <% } else { %>
+                              <input type="text" class="form-control" name="img1" value="/images/<%= e.img %>">
+                            <% } %>
+                          </div>                       
+                        <label for="input-img1" class="btn btn-primary">Cập nhật Avatar</label>
+                        <input id="input-img1" class="inputImg1" type="file" accept="image/jpeg, image/png, image/jpg" >
                     </div>
                 </div>
             </div>
+            
 
             <!-- Đây là nội dung form -->
             <div class="col-md-8">
-                <form>
+                <form action="/users/updateProfile" method="POST">
                     <div class="form-group">
                         <label for="username">Username</label>
-                        <input type="email" class="form-control" id="username" placeholder="Enter your full name">
+                        <input type="email" class="form-control" id="username" name="username" placeholder="Vui lòng nhập gmail" value="<%= e.username %>">
                     </div>
                     <div class="form-group">
                         <label for="password">Password</label>
-                        <input type="password" class="form-control" id="password" placeholder="Enter your password">
+                        <input type="password" class="form-control" id="password" name="passwork" placeholder="Vui lòng nhập mật khẩu" value="<%= e.passwork %>">
                     </div>
-                    <div class="form-group">
-                        <label for="role">Role</label>
-                        <select class="form-control" id="role">
-                            <option value="admin">Admin</option>
-                            <option value="user">User</option>
-                        </select>
+                    <div class="form-group">                        
+                        <label for="role">Quyền</label>
+                        <% if (e.quyen == "1"){ %>
+                            <select class="form-control" id="role" name="quyen">
+                                <option value="1" selected >Admin</option>
+                                <option value="2" disabled>Saler</option>
+                                <option value="3" disabled>Staff</option>
+                            </select>
+                        <% } else if (e.quyen == "2") {%> 
+                            <select class="form-control" id="role" name="quyen">
+                                <option value="1" disabled>Admin</option>
+                                <option value="2" selected>Saler</option>
+                                <option value="3" >Staff</option>
+                            </select>
+                        <% } else { %>
+                            <select class="form-control" id="role" name="quyen">
+                                <option value="1" disabled>Admin</option>
+                                <option value="2" >Saler</option>
+                                <option value="3" selected>Staff</option>
+                            </select>
+                        <% } %>
                     </div>
                     <div class="form-group">
                         <label for="fullName">Full Name</label>
-                        <input type="text" class="form-control" id="fullName" placeholder="Enter your full name">
+                        <input type="text" class="form-control" name="name" id="fullName" placeholder="Vui lòng nhập họ và tên" value="<%= e.name %>">
                     </div>
                     <div class="form-group">
                         <label for="phone">Phone</label>
-                        <input type="tel" class="form-control" id="phone" placeholder="Enter your phone number">
+                        <input type="tel" class="form-control" name="sdt" id="phone" placeholder="Vui lòng nhập số điện thoại" value="<%= e.sdt %>">
                     </div>
                     <div class="form-group">
-                        <label for="dob">Date of Birth</label>
-                        <input type="date" class="form-control" id="dob">
+                        <label for="diachi">Address</label>
+                        <input type="text" class="form-control" name="diachi" id="diachi" placeholder="Vui lòng nhập địa chỉ" value="<%= e.diachi %>">
                     </div>
-                    <button type="submit" class="btn btn-primary">Cập nhật</button>
+                    <div class="form-group">
+                        <label>Date of Birth</label>  
+                    <% var ngaysinhParts = e.ngaysinh.split('-'); %>
+                    <% var ngaysinhISO = ngaysinhParts[2] + '-' + ngaysinhParts[1] + '-' + ngaysinhParts[0]; %>
+                        <input type="date" class="form-control" name="ngaysinh" value="<%= ngaysinhISO%>">
+                    </div>
+                    <div class="form-group text-center mt-2">
+                        <button type="submit" class="btn btn-primary">Cập nhật</button>
+                    </div>
+                                    
                 </form>
             </div>
 
             <!-- Đây là nội dung card dự án -->
             <div class="col-12">
                 <div class="project-card">
-                    <h2 class="text-center">Dự án gần đây</h2>
+                    <h2 class="text-center">Dự án phê duyệt gần đây</h2>
                     <div class="row">
                         <div class="col-md-4">
                             <div class="card">
@@ -98,32 +141,77 @@
                                     <a href="#" class="btn btn-primary">Xem chi tiết</a>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card">
-                                <img src="../public/images/meo.jpg" class="card-img-top" alt="Project 2">
-                                <div class="card-body">
-                                    <h5 class="card-title">Dự án 2</h5>
-                                    <p class="card-text">Mô tả dựái 2.</p>
-                                    <a href="#" class="btn btn-primary">Xem chi tiết</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card">
-                                <img src="../public/images/meo.jpg" class="card-img-top" alt="Project 3">
-                                <div class="card-body">
-                                    <h5 class="card-title">Dự án 3</h5>
-                                    <p class="card-text">Mô tả dự án 3.</p>
-                                    <a href="#" class="btn btn-primary">Xem chi tiết</a>
-                                </div>
-                            </div>
-                        </div>
-                        
+                        </div>                       
                     </div>
                 </div>
             </div>
+            <% } } %>
+
+            <%}
+
+            }%>
+
         </div>
     </div>
 </body>
 </html>
+
+<script>
+
+  document.getElementById('input-img1').addEventListener('change', function(e) {
+    var file = e.target.files[0];
+    var reader = new FileReader();
+
+    reader.onload = function(e) {
+      var imgValue = e.target.result;
+      document.getElementById('img-preview1').src = imgValue;
+
+      // Tạo FormData object
+      var formData = new FormData();
+      formData.append('img1', file); // Thêm ảnh vào FormData
+
+      // Gửi yêu cầu AJAX để tải ảnh lên server
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', '/users/uploadImage', true);
+      xhr.onload = function() {
+        if (xhr.status === 200) {
+          // Lấy đường dẫn của ảnh đã tải lên từ phản hồi
+          var imagePath = xhr.responseText;
+          document.getElementsByName('img1')[0].value = imagePath;
+          
+        }
+      };
+      xhr.send(formData);
+    };
+
+    reader.readAsDataURL(file);
+  });
+
+//   xhr.onload = function() {
+//             if (xhr.status === 200) {
+//                 // Lấy đường dẫn của ảnh đã tải lên từ phản hồi
+//                 var imagePath = xhr.responseText;
+//                 document.getElementsByName('img1')[0].value = imagePath;
+
+//                 // Gửi yêu cầu AJAX để cập nhật ảnh trong cơ sở dữ liệu
+//                 var updateData = {
+//                 img: imagePath,
+//                 username: '<% if(data.length !=0){ for(let e of data) { e.username }}%>' // Thay thế với giá trị của username tương ứng
+//                 };
+                
+//                 var updateXHR = new XMLHttpRequest();
+//                 updateXHR.open('POST', '/users/updateImage', true);
+//                 updateXHR.setRequestHeader('Content-Type', 'application/json');
+//                 updateXHR.onload = function() {
+//                 if (updateXHR.status === 200) {
+//                     // Cập nhật thành công trong cơ sở dữ liệu
+//                     console.log('Cập nhật ảnh thành công trong cơ sở dữ liệu');
+//                 } else {
+//                     console.log('Lỗi khi cập nhật ảnh trong cơ sở dữ liệu');
+//                 }
+//                 };
+//                 updateXHR.send(JSON.stringify(updateData));
+//             }
+//             };
+
+</script>

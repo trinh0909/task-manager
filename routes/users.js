@@ -138,6 +138,56 @@ router.post('/update', function(req, res, next) {
   });
 });
 
+//Cập nhật thông tin cá nhân
+router.post('/updateProfile', function(req, res, next) {
+  var a = req.body;
+  var sql = `UPDATE user SET username = "${a.username}", passwork = "${a.passwork}", quyen = ${a.quyen}, name = "${a.name}", diachi = "${a.diachi}", sdt = "${a.sdt}", ngaysinh = "${a.ngaysinh}" WHERE username = '${a.username}'`;
+  
+  db.query(sql, function(err, result) {
+    if (err) throw err;
+    res.redirect("http://localhost:3000/users/manager?page=1&loai=tt");
+  });
+});
+router.post('/updateImage', function(req, res, next) {
+  var a = req.body;
+  var sql = `UPDATE user SET img = "${a.img}" WHERE username = '${a.username}'`;
+  
+  db.query(sql, function(err, result) {
+    if (err) {
+      console.log('Lỗi khi cập nhật ảnh trong cơ sở dữ liệu:', err);
+      res.status(500).send('Lỗi khi cập nhật ảnh trong cơ sở dữ liệu');
+    } else {
+      console.log('Cập nhật ảnh thành công trong cơ sở dữ liệu');
+      res.status(200).send('Cập nhật ảnh thành công trong cơ sở dữ liệu');
+    }
+  });
+});
+
+//Thêm khách hàng
+router.post('/khachhang', function(req, res, next) {
+  var a = req.body
+  var sql = `insert into customer(name, phone, ngaysinh, address, trangthai, order_project) values("${a.name}", "${a.phone}",${a.ngaysinh}, "${a.address}","${a.trangthai}","${a.order}")`
+  db.query(sql,function(err,result){
+    if (err) {
+      console.error('Error executing query: ' + err.stack);
+      // Hiển thị thông báo cảnh báo nếu có lỗi
+      res.send("Lỗi do nhập thông tin chưa chính xác!")
+
+      return;
+    }
+    res.redirect("http://localhost:3000/users/manager?page=3&loai=cv")
+  })
+});
+//Xóa KH
+router.get('/xoaKH/:id', function(req, res, next) {
+  var page = req.query['page'];
+  var loai = req.query['loai'];
+  var sql = `delete from customer where id="${req.params.id}"`;
+  db.query(sql, function(err, result) {
+    if (err) throw err;
+    res.redirect(`http://localhost:3000/users/manager?page=${page}&loai=${loai}`);    
+  });
+});
 
 
 router.get('/manager', function(req, res, next) {
@@ -166,9 +216,14 @@ router.get('/manager', function(req, res, next) {
       else if(id == 3) {
         sql = `SELECT * FROM user JOIN access ON user.quyen = access.id where quyen = 2` 
       }
+  } 
+  else if(loai == 'tt'){
+    if(req.session.user){
+      var username = req.session.user.username
+      sql = `select * from user where username = '${username}'`
+    }
+   
   }
-
-
 }
    else if(req.session.user.access == 2){
     if(loai == 'cv'){
@@ -186,7 +241,7 @@ router.get('/manager', function(req, res, next) {
         e.ngaysinh = moment(e.ngaysinh).format('DD-MM-YYYY')
       }
     }
-    //res.send(data)
+    // res.send(data)
     res.render('manager.ejs',{id:id,loai:loai,data:data});
   } )
 }
