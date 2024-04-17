@@ -204,7 +204,7 @@ router.get('/manager', function(req, res, next) {
         else if(id == 2)
           sql = `select * from customer where trangthai = 2` 
         else 
-         sql = `select * from customer where trangthai = 1` 
+         sql = `select * from projects` 
   }
    if(loai == 'nv') {
       if(id == 1){
@@ -216,23 +216,25 @@ router.get('/manager', function(req, res, next) {
       else if(id == 3) {
         sql = `SELECT * FROM user JOIN access ON user.quyen = access.id where quyen = 2` 
       }
-  } 
-  else if(loai == 'tt'){
-    if(req.session.user){
-      var username = req.session.user.username
-      sql = `select * from user where username = '${username}'`
-    }
-   
   }
+
+
 }
+
+
    else if(req.session.user.access == 2){
     if(loai == 'cv'){
       if( id == 1)
         sql = `select * from customer where trangthai = 0`
-    else if(id == 2) 
-      sql = `select * from customer where trangthai = 1` 
+      else if(id == 2) {
+        var username = req.session.user.username
+        sql = `SELECT * FROM projects JOIN customer ON projects.id_customer = customer.id  where projects.id_user = '${username}'` 
+        
+      }
   }
   } 
+
+
   db.query(sql,(err,data)=>{
     if(err) throw err;
     data1 = data
@@ -241,7 +243,7 @@ router.get('/manager', function(req, res, next) {
         e.ngaysinh = moment(e.ngaysinh).format('DD-MM-YYYY')
       }
     }
-    // res.send(data)
+    //res.send(data)
     res.render('manager.ejs',{id:id,loai:loai,data:data});
   } )
 }
@@ -265,6 +267,12 @@ router.get('/logout',(req,res)=>{
   if(req.session.user){
     req.session.destroy()
     res.redirect('http://localhost:3000/')
+  }
+})
+router.get('/job',(req,res)=>{
+  if(req.session.user){
+    //req.session.destroy()
+    res.render('job')
   }
 })
 
