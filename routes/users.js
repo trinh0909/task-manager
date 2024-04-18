@@ -11,6 +11,7 @@ function User(username, password,access,name, img) {
   this.name   = name;
   this.img   = img;
 }
+var data2 = null;
 var db=require('../model/connectdb');
 var temp = null;
 // router.use(session({
@@ -150,11 +151,11 @@ router.get('/manager', function(req, res, next) {
      
       if(loai == 'cv'){
           if( id == 3)
-            sql = `select * from customer where trangthai = 0` ;
+          sql = `select * from customer where trangthai = 0`;
         else if(id == 2)
-          sql = `select * from customer where trangthai = 2` 
+          sql = `SELECT * FROM (projects JOIN customer ON projects.id_customer = customer.id) JOIN processing ON projects.id = processing.id_projects WHERE projects.process =1` 
         else 
-         sql = `select * from projects` 
+         sql = `SELECT * FROM projects where process = 0` 
   }
    if(loai == 'nv') {
       if(id == 1){
@@ -192,8 +193,10 @@ router.get('/manager', function(req, res, next) {
   }
   } 
 
-
+  
   db.query(sql,(err,data)=>{
+    var dt2 = null;
+    var sql2;
     if(err) throw err;
     data1 = data
     if(data.length !=0){
@@ -206,9 +209,38 @@ router.get('/manager', function(req, res, next) {
         e.ngayBD = moment(e.ngayBD).format('DD-MM-YYYY')
         e.ngayKT = moment(e.ngayKT).format('DD-MM-YYYY')
       }
+       sql2 = `select*from user WHERE quyen = 3`
     }
-    //res.send(data)
-    res.render('manager.ejs',{id:id,loai:loai,data:data});
+      if(sql2 != null){
+        db.query(sql2,(err,result)=>{
+          if(err) throw err;
+          res.render('manager.ejs',{id:id,loai:loai,data:data,result:result});
+        })
+      }
+      else {
+        //res.send(data)
+        res.render('manager.ejs',{id:id,loai:loai,data:data});
+      }
+    // var sql2 = `select*from user WHERE quyen = 3`
+    //   db.query(sql2,(err,result)=>{
+    //     if(err) throw err;
+    //     dt2 = result
+    //     res.send(data.length)
+    //   })
+    // if(dt2 != null)
+    //     {
+    //       res.send('sss')
+    //     }
+    //     //res.render('manager.ejs',{id:id,loai:loai,data:data,result:data2});
+    // else
+    // {
+    //   res.send('bbb')
+    // }
+        //res.render('manager.ejs',{id:id,loai:loai,data:data});
+        //res.send(data1)
+        // if(data.affectedRows > 0){
+        //   res.send(data1)
+        // }
   } )
 }
 });

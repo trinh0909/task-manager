@@ -69,5 +69,50 @@ router.post('/',(req,res) =>{
     // var sql = 'INSERT INTO users (name, email) VALUES ('John Doe', 'john@example.com')';
   
 });
+router.post('/process',(req,res)=>{
+     var username = req.body.nv
+     var job = req.body.idpro
+     var startjob = req.body.ngayBD
+     var endjob = req.body.ngayKT 
+     var idcv = req.body.idCV 
+     var idkh = req.body.idkh 
+    //var username = 'hyzaxx@gmail.com'
+     // Thiết lập các tùy chọn email
+     let mailOptions = {
+        from: 'truongmaitrinh0909@gmail.com',
+        to: username,
+        subject: 'Mail nhận công việc',
+        text: `xin chào, tôi là quản lý tôi đã giao cho bạn một công việc là ${job}. thời gian diễn ra từ ${startjob} đến ${endjob}
+        \n\nXin vui lòng thực hiện công việc đúng thời hạn, chi tiết khách hàng xin vui lòng xem trên website của công ty.\n\nTrân trọng, ${req.session.user.name}`
+    };
+
+    // Gửi email
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+           // res.redirect('/users/manager?page=1&loai=cv')
+           // console.log(error);
+            res.send('Failed to send email.');
+        } else { 
+            var sql = `UPDATE projects SET process = 1 WHERE id = ${idcv}` 
+            db.query(sql,(err,data)=>{
+                if(err) throw err;
+                //res.send(data)
+                if(data.affectedRows > 0){
+                    var sql2 = `INSERT INTO processing (id_user, id_projects) VALUES ('${username}','${idkh}')`
+                    db.query(sql2,(err,result)=>{
+                        if(err) throw err;
+                        res.redirect('/users/manager?page=1&loai=cv');
+                    })
+                }
+                else res.send('không thành công')
+            })
+           // res.send(idcv)
+           // res.redirect('/users/manager?page=1&loai=cv')
+           // console.log('Email sent: ' + info.response);
+            //res.send('Email sent successfully.');
+        }
+    });
+    //res.send(username)
+})
 // Xuất router để có thể sử dụng trong file khác
 module.exports = router;
