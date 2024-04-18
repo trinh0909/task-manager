@@ -30,12 +30,16 @@
             padding: 20px; /* Khoảng cách bên trong card dự án */
             margin-top: 40px; /* Khoảng cách giữa form và card dự án */
         } 
-        /* #myDiv {
+        #myDiv {
         display: none;
-        } */
+        }
         .inputImg1{
             display: none;
-          }
+        }
+        .capnhat{
+            padding: 5px 35px;
+            margin: 2px;
+        }
     </style>
 </head>
 <body>
@@ -45,6 +49,7 @@
                 <% if(loai =='tt'){ %> 
                     <% if(data.length !=0){ %>
                         <% for(let e of data) { %>
+                            <% let usernameimg = e.username; %>
             <h2 class="text-center">Thông tin cá nhân</h2>
             <!-- Đây là nội dung card -->
             <div class="col-md-4">
@@ -54,16 +59,19 @@
                     </div>                
                     <div class="card-body  text-center">
                         <h5 class="card-title" > <%= e.name %> </h5>
-                        <p class="card-text"><%= e.username %></p> 
-                        <div class="mb-2">              
-                            <% if (e.img.includes('/images/')) { %>
-                              <input type="text" class="form-control" name="img1" value="<%= e.img %>">
-                            <% } else { %>
-                              <input type="text" class="form-control" name="img1" value="/images/<%= e.img %>">
-                            <% } %>
-                          </div>                       
-                        <label for="input-img1" class="btn btn-primary">Cập nhật Avatar</label>
-                        <input id="input-img1" class="inputImg1" type="file" accept="image/jpeg, image/png, image/jpg" >
+                        <p class="card-text"><%= e.username %></p>
+                        <form action="/users/updateImage/<%= e.username %>" method="post">
+                            <div class="mb-2" id="myDiv">              
+                                <% if (e.img.includes('/images/')) { %>
+                                  <input type="text" name="img1" value="<%= e.img %>">
+                                <% } else { %>
+                                  <input type="text" name="img1" value="/images/<%= e.img %>">
+                                <% } %>
+                              </div>                       
+                            <label for="input-img1" class="btn btn-primary">Thay đổi Avatar</label>
+                            <input id="input-img1" class="inputImg1" type="file" accept="image/jpeg, image/png, image/jpg" >                                                                   
+                            <input type="submit" class="btn btn-primary capnhat" value="Cập nhật">
+                        </form> 
                     </div>
                 </div>
             </div>
@@ -71,14 +79,16 @@
 
             <!-- Đây là nội dung form -->
             <div class="col-md-8">
-                <form action="/users/updateProfile" method="POST">
+                <form action="/users/updateProfile" method="POST" onsubmit="return validateForm()">
                     <div class="form-group">
                         <label for="username">Username</label>
-                        <input type="email" class="form-control" id="username" name="username" placeholder="Vui lòng nhập gmail" value="<%= e.username %>">
+                        <input type="email" class="form-control" id="username" name="username" placeholder="Vui lòng nhập gmail" value="<%= e.username %>" readonly>
+                        <p id="emailError" class="text-danger"></p>
                     </div>
                     <div class="form-group">
                         <label for="password">Password</label>
                         <input type="password" class="form-control" id="password" name="passwork" placeholder="Vui lòng nhập mật khẩu" value="<%= e.passwork %>">
+                        <p id="passwordError" class="text-danger"></p>
                     </div>
                     <div class="form-group">                        
                         <label for="role">Quyền</label>
@@ -104,7 +114,8 @@
                     </div>
                     <div class="form-group">
                         <label for="fullName">Full Name</label>
-                        <input type="text" class="form-control" name="name" id="fullName" placeholder="Vui lòng nhập họ và tên" value="<%= e.name %>">
+                        <input type="text" class="form-control" id="name" name="name" id="fullName" placeholder="Vui lòng nhập họ và tên" value="<%= e.name %>">
+                        <p id="nameError" class="text-danger"></p>
                     </div>
                     <div class="form-group">
                         <label for="phone">Phone</label>
@@ -125,32 +136,12 @@
                     </div>
                                     
                 </form>
-            </div>
-
-            <!-- Đây là nội dung card dự án -->
-            <div class="col-12">
-                <div class="project-card">
-                    <h2 class="text-center">Dự án phê duyệt gần đây</h2>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="card">
-                                <img src="../public/images/meo.jpg" class="card-img-top" alt="Project 1">
-                                <div class="card-body">
-                                    <h5 class="card-title">Dự án 1</h5>
-                                    <p class="card-text">Mô tả dự án 1.</p>
-                                    <a href="#" class="btn btn-primary">Xem chi tiết</a>
-                                </div>
-                            </div>
-                        </div>                       
-                    </div>
-                </div>
-            </div>
+            </div>            
             <% } } %>
 
             <%}
 
-            }%>
-
+            }%>            
         </div>
     </div>
 </body>
@@ -172,7 +163,7 @@
 
       // Gửi yêu cầu AJAX để tải ảnh lên server
       var xhr = new XMLHttpRequest();
-      xhr.open('POST', '/users/uploadImage', true);
+      xhr.open('POST', '/users/uploadImage1', true);
       xhr.onload = function() {
         if (xhr.status === 200) {
           // Lấy đường dẫn của ảnh đã tải lên từ phản hồi
@@ -187,31 +178,53 @@
     reader.readAsDataURL(file);
   });
 
-//   xhr.onload = function() {
-//             if (xhr.status === 200) {
-//                 // Lấy đường dẫn của ảnh đã tải lên từ phản hồi
-//                 var imagePath = xhr.responseText;
-//                 document.getElementsByName('img1')[0].value = imagePath;
 
-//                 // Gửi yêu cầu AJAX để cập nhật ảnh trong cơ sở dữ liệu
-//                 var updateData = {
-//                 img: imagePath,
-//                 username: '<% if(data.length !=0){ for(let e of data) { e.username }}%>' // Thay thế với giá trị của username tương ứng
-//                 };
-                
-//                 var updateXHR = new XMLHttpRequest();
-//                 updateXHR.open('POST', '/users/updateImage', true);
-//                 updateXHR.setRequestHeader('Content-Type', 'application/json');
-//                 updateXHR.onload = function() {
-//                 if (updateXHR.status === 200) {
-//                     // Cập nhật thành công trong cơ sở dữ liệu
-//                     console.log('Cập nhật ảnh thành công trong cơ sở dữ liệu');
-//                 } else {
-//                     console.log('Lỗi khi cập nhật ảnh trong cơ sở dữ liệu');
-//                 }
-//                 };
-//                 updateXHR.send(JSON.stringify(updateData));
-//             }
-//             };
+  function validateForm() {
+    const emailInput = document.getElementById('username');
+    const usernameError = document.getElementById('usernameError');
+
+    const passwordInput = document.getElementById('password');
+    const passwordError = document.getElementById('passwordError');
+
+    const nameInput = document.getElementById('name');
+    const nameError = document.getElementById('nameError');
+
+    // Kiểm tra định dạng email
+    // const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    // if (!emailPattern.test(emailInput.value)) {
+    //     usernameError.textContent = 'Email không hợp lệ';
+    //     return false; // Ngăn không gửi form
+    // } else {
+    //     usernameError.textContent = ''; // Xóa thông báo lỗi
+    // }
+
+    // Kiểm tra độ dài mật khẩu
+    if (passwordInput.value.length < 6) {
+        passwordError.textContent = 'Mật khẩu phải có ít nhất 6 ký tự';
+        return false; // Ngăn không gửi form
+    } else {
+        passwordError.textContent = ''; // Xóa thông báo lỗi
+    }
+
+    // Kiểm tra ký tự hợp lệ trong mật khẩu
+    const passwordPattern = /^[a-zA-Z0-9]+$/;
+    if (!passwordPattern.test(passwordInput.value)) {
+        passwordError.textContent = 'Mật khẩu chỉ được chứa số và chữ cái';
+        return false; // Ngăn không gửi form
+    } else {
+        passwordError.textContent = ''; // Xóa thông báo lỗi
+    }
+
+    // Kiểm tra ký tự hợp lệ trong trường name
+    const namePattern = /^[a-zA-Z\s]+$/;
+    if (!namePattern.test(nameInput.value.trim())) {
+        nameError.textContent = 'Vui lòng chỉ nhập chữ';
+        return false; // Ngăn không gửi form
+    } else {
+        nameError.textContent = ''; // Xóa thông báo lỗi
+    }
+
+    return true; // Cho phép gửi form
+}
 
 </script>

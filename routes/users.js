@@ -59,6 +59,83 @@ router.post('/login', function(req, res, next) {
   } 
 });
 
+router.get('/forgotpassword', function(req, res) {
+  res.render('forgotpassword');
+});
+const nodemailer = require('nodemailer');
+//======================================================================================================================================================
+router.post('/forgotpasswd', function(req, res, next) {
+  const email = req.body.email; // Lấy giá trị địa chỉ email từ yêu cầu POST
+  var sql = `SELECT * FROM user WHERE username="${email}"`;
+  db.query(sql,function(err,result){
+    if (err) {                 
+      console.error(err); 
+      res.render('forgotpassword');
+    }    
+    if (result && result.length > 0) {
+
+      const otp = Math.floor(1000 + Math.random() * 9000); // Tạo mã OTP ngẫu nhiên từ 1000 đến 9999
+
+      // Tạo một transporter
+      let transporter = nodemailer.createTransport({
+        service: 'Gmail',
+        auth: {
+          user: 'lekimngan22102002@gmail.com', // Địa chỉ email của bạn
+          pass: 'okngrxtogvrqxvej' // Mật khẩu email của bạn
+        }
+      });
+    
+      // Tạo một email
+      let mailOptions = {
+        from: 'lekimngan22102002@gmail.com', // Địa chỉ email của bạn
+        to: email, // Địa chỉ email của người nhận (lấy từ yêu cầu POST)
+        subject: 'MÃ OTP',
+        text: 'Xin chào, mã OTP của bạn là ' + otp
+      };
+    
+      // Gửi email
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.log(error);
+          return res.status(500).send('Internal Server Error');
+        }
+        console.log('Email sent: ' + info.response);
+        return res.status(200).send('Email sent successfully');        
+      });
+       res.render('sendotp',{ otp: otp, username:email });
+
+      } else {                
+        return res.render('/forgotpassword');
+      }
+  })  
+});
+
+router.post('/sendotp', function(req, res) {
+  const enteredOTP = req.body.otp1 + req.body.otp2 + req.body.otp3 + req.body.otp4;
+  const receivedOTP = req.body.otp; // Đây là mã OTP nhận được, bạn cần thay đổi giá trị này bằng mã OTP thực tế bạn nhận được
+  const username = req.body.username;
+  if (enteredOTP === receivedOTP) {
+    res.render('reset', {username: username});
+  } else {
+    // Xử lý khi mã OTP không khớp
+    res.send('Mã OTP không hợp lệ');
+  }
+});
+
+router.post('/reset', function(req, res) {
+  const username = req.body.username;
+  const password = req.body.password;
+  // const confirmPassword = req.body.confirmPassword;  
+  var sql = `UPDATE user SET passwork = "${password}" WHERE username = "${username}"`;
+  db.query(sql,function(err,result){
+    if (err) {                 
+      console.error(err);       
+    }    
+    res.redirect('http://localhost:3000/');
+  })  
+});
+
+//======================================================================================================================================================
 //Thêm nhân viên
 router.post('/nhanvien', function(req, res, next) {
   var a = req.body
@@ -127,6 +204,16 @@ router.post('/uploadImage', upload.single('img'), function(req, res, next) {
   // Trả về đường dẫn của ảnh đã tải lên để sử dụng trong mã JavaScript
   res.send(imagePath);
 });
+// Tuyến đường để tải ảnh lên server
+router.post('/uploadImage1', upload.single('img1'), function(req, res, next) {
+  if (!req.file) {
+    return res.status(400).send('No file uploaded.');
+  }
+  // Lấy đường dẫn của ảnh đã tải lên
+  var imagePath = '/images/' + req.file.filename;
+  // Trả về đường dẫn của ảnh đã tải lên để sử dụng trong mã JavaScript
+  res.send(imagePath);
+});
 
 router.post('/update', function(req, res, next) {
   var a = req.body;
@@ -148,18 +235,16 @@ router.post('/updateProfile', function(req, res, next) {
     res.redirect("http://localhost:3000/users/manager?page=1&loai=tt");
   });
 });
-router.post('/updateImage', function(req, res, next) {
-  var a = req.body;
-  var sql = `UPDATE user SET img = "${a.img}" WHERE username = '${a.username}'`;
-  
+//Cập nhật ảnh của profile
+router.post('/updateImage/:id', function(req, res, next) {
+  var id = req.params.id;
+  var newImg = req.body.img1; // Lấy giá trị mới từ ô input
+
+  var sql = `UPDATE user SET img = "${newImg}" WHERE username ="${id}"`;
+
   db.query(sql, function(err, result) {
-    if (err) {
-      console.log('Lỗi khi cập nhật ảnh trong cơ sở dữ liệu:', err);
-      res.status(500).send('Lỗi khi cập nhật ảnh trong cơ sở dữ liệu');
-    } else {
-      console.log('Cập nhật ảnh thành công trong cơ sở dữ liệu');
-      res.status(200).send('Cập nhật ảnh thành công trong cơ sở dữ liệu');
-    }
+    if (err) throw err;
+    res.redirect("http://localhost:3000/users/manager?page=1&loai=tt");
   });
 });
 
@@ -217,7 +302,12 @@ router.get('/manager', function(req, res, next) {
         sql = `SELECT * FROM user JOIN access ON user.quyen = access.id where quyen = 2` 
       }
   }
-
+  else if(loai == 'tt'){
+    if(req.session.user){
+      var username = req.session.user.username
+      sql = `select * from user where username = '${username}'`
+    }
+  }
 
 }
 
