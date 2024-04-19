@@ -86,7 +86,7 @@
                 <%if(session.user.access == 1){ if(loai == 'cv'  ) { var count = 0 %>
                     <a class="nav-item nav-link active" id ='1' href="/users/manager?page=1&loai=<%= loai %>">Công việc chưa giao</a> 
                     <a class="nav-item nav-link" id ='2' href="/users/manager?page=2&loai=<%= loai %>">Công việc đã giao</a>   
-                    <a class="nav-item nav-link" id ='3'  href="/users/manager?page=3&loai=<%= loai %>">dữ liệu khách hàng</a>  
+                    <a class="nav-item nav-link" id ='3'  href="/users/manager?page=3&loai=<%= loai %>">Dữ liệu khách hàng</a>  
                <% } else if(loai == 'nv'){ %> 
                 <a class="nav-item nav-link" id ='1' href="/users/manager?page=1&loai=<%= loai %>">Tất cả nhân viên</a> 
                 <a class="nav-item nav-link" id ='2' href="/users/manager?page=2&loai=<%= loai %>">Nhân viên</a>   
@@ -164,6 +164,9 @@
         <%- include('staff.ejs') %>
         <% if(session.user.access == 2) { %>
           <%- include('customer.ejs') %>
+        <% } %>
+        <% if (loai == 'tt') { %>
+          <%- include('profile.ejs') %>
         <% } %>
       </div>      
 

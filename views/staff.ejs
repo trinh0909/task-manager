@@ -33,16 +33,17 @@
   <% if(session.user.access == 1){ %>
   <% if(loai =='cv'){ %> 
     <% if(id == 3){ %>
-      <div class="tb" style="flex-grow: 1; flex-basis: 70%; margin: 0; padding: 0"> 
-        <h2 style="text-align: center; margin: 50px;">Danh Sách khách hàng cần liên hệ</h2>
+      <div class="tb" style="flex-grow: 1; flex-basis: 70%; margin: 0; padding: 0">         
+        <h2 style="text-align: center; margin: 50px;">Danh sách khách hàng cần liên hệ</h2>
+        <button class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#exampleModal1">Thêm khách hàng</button>
         <!-- đổ dữ liệu lên -->
         <table id="example" class="table table-striped table-hover" >
           <thead>
             <tr>
-                <th>name</th>
+                <th>Name</th>
                 <th>Phone</th>
-                <th>birthday</th>
-                <th> address</th>
+                <th>Birthday</th>
+                <th>Address</th>
                 <!-- <th>Name</th>
                 
                 <th>Dob</th>
@@ -60,7 +61,7 @@
                 <td><%= e.ngaysinh %></td>
                 <td> <%= e.address %></td>
                 <td>
-                  <a href="#" style="color: red; text-decoration: none;">Xóa</a>
+                  <a href="/users/xoaKH/<%= e.id%>?page=3&loai=cv" style="color: red; text-decoration: none;">Xóa</a>
                 </td>
             </tr>
               
@@ -71,7 +72,7 @@
       </div>
  <% } } else if(loai == 'nv'){ %>
   <div class="tb" style="flex-grow: 1; flex-basis: 70%; margin: 0; padding: 0"> 
-    <h2 style="text-align: center; margin: 50px;" >Danh Sách nhân viên</h2>
+    <h2 style="text-align: center; margin: 50px;" >Danh sách nhân viên</h2>
     <button class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#exampleModal">Thêm nhân viên</button>
     <!-- <a href="#" class="btn btn-primary position-absolute bottom-1 mb-2" data-bs-toggle="modal" data-bs-target="#exampleModal">Thêm nhân viên</a> -->
     <!-- đổ dữ liệu lên -->
@@ -213,8 +214,51 @@
   </div>
 </div>
 
-<!-- update -->
-
+<!-- Modal Thêm Khách hàng-->
+<div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Thêm khách hàng</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="myForm" action="/users/khachhang" method="POST">
+          <div class="mb-2">
+            <label for="name" class="form-label">Họ và tên</label>
+            <input type="text" class="form-control" name="name" id="name" aria-describedby="emailHelp">                  
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Số điện thoại</label>
+            <input type="tel" class="form-control" name="phone">
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Ngày sinh</label>
+            <input type="date" class="form-control" name="ngaysinh">
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Địa chỉ</label>
+            <input type="text" class="form-control" name="address">
+          </div>
+          <div class="mb-2">
+            <label for="trangthai">Trạng thái </label>
+                <select class="form-control" id="trangthai" name="trangthai">
+                    <option value="0" selected >Chưa hoàn thành</option>
+            </select>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Order</label>
+            <input type="text" class="form-control" name="order">
+          </div>                   
+          <div class="d-flex justify-content-center">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            <input type="submit" class="btn btn-primary mx-2" value="Thêm">            
+          </div>       
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 </html>
 

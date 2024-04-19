@@ -60,6 +60,83 @@ router.post('/login', function(req, res, next) {
   } 
 });
 
+router.get('/forgotpassword', function(req, res) {
+  res.render('forgotpassword');
+});
+const nodemailer = require('nodemailer');
+//======================================================================================================================================================
+router.post('/forgotpasswd', function(req, res, next) {
+  const email = req.body.email; // Lấy giá trị địa chỉ email từ yêu cầu POST
+  var sql = `SELECT * FROM user WHERE username="${email}"`;
+  db.query(sql,function(err,result){
+    if (err) {                 
+      console.error(err); 
+      res.render('forgotpassword');
+    }    
+    if (result && result.length > 0) {
+
+      const otp = Math.floor(1000 + Math.random() * 9000); // Tạo mã OTP ngẫu nhiên từ 1000 đến 9999
+
+      // Tạo một transporter
+      let transporter = nodemailer.createTransport({
+        service: 'Gmail',
+        auth: {
+          user: 'lekimngan22102002@gmail.com', // Địa chỉ email của bạn
+          pass: 'okngrxtogvrqxvej' // Mật khẩu email của bạn
+        }
+      });
+    
+      // Tạo một email
+      let mailOptions = {
+        from: 'lekimngan22102002@gmail.com', // Địa chỉ email của bạn
+        to: email, // Địa chỉ email của người nhận (lấy từ yêu cầu POST)
+        subject: 'MÃ OTP',
+        text: 'Xin chào, mã OTP của bạn là ' + otp
+      };
+    
+      // Gửi email
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.log(error);
+          return res.status(500).send('Internal Server Error');
+        }
+        console.log('Email sent: ' + info.response);
+        return res.status(200).send('Email sent successfully');        
+      });
+       res.render('sendotp',{ otp: otp, username:email });
+
+      } else {                
+        return res.render('/forgotpassword');
+      }
+  })  
+});
+
+router.post('/sendotp', function(req, res) {
+  const enteredOTP = req.body.otp1 + req.body.otp2 + req.body.otp3 + req.body.otp4;
+  const receivedOTP = req.body.otp; // Đây là mã OTP nhận được, bạn cần thay đổi giá trị này bằng mã OTP thực tế bạn nhận được
+  const username = req.body.username;
+  if (enteredOTP === receivedOTP) {
+    res.render('reset', {username: username});
+  } else {
+    // Xử lý khi mã OTP không khớp
+    res.send('Mã OTP không hợp lệ');
+  }
+});
+
+router.post('/reset', function(req, res) {
+  const username = req.body.username;
+  const password = req.body.password;
+  // const confirmPassword = req.body.confirmPassword;  
+  var sql = `UPDATE user SET passwork = "${password}" WHERE username = "${username}"`;
+  db.query(sql,function(err,result){
+    if (err) {                 
+      console.error(err);       
+    }    
+    res.redirect('http://localhost:3000/');
+  })  
+});
+
+//======================================================================================================================================================
 //Thêm nhân viên
 router.post('/nhanvien', function(req, res, next) {
   var a = req.body
@@ -128,6 +205,16 @@ router.post('/uploadImage', upload.single('img'), function(req, res, next) {
   // Trả về đường dẫn của ảnh đã tải lên để sử dụng trong mã JavaScript
   res.send(imagePath);
 });
+// Tuyến đường để tải ảnh lên server
+router.post('/uploadImage1', upload.single('img1'), function(req, res, next) {
+  if (!req.file) {
+    return res.status(400).send('No file uploaded.');
+  }
+  // Lấy đường dẫn của ảnh đã tải lên
+  var imagePath = '/images/' + req.file.filename;
+  // Trả về đường dẫn của ảnh đã tải lên để sử dụng trong mã JavaScript
+  res.send(imagePath);
+});
 
 router.post('/update', function(req, res, next) {
   var a = req.body;
@@ -139,6 +226,54 @@ router.post('/update', function(req, res, next) {
   });
 });
 
+//Cập nhật thông tin cá nhân
+router.post('/updateProfile', function(req, res, next) {
+  var a = req.body;
+  var sql = `UPDATE user SET username = "${a.username}", passwork = "${a.passwork}", quyen = ${a.quyen}, name = "${a.name}", diachi = "${a.diachi}", sdt = "${a.sdt}", ngaysinh = "${a.ngaysinh}" WHERE username = '${a.username}'`;
+  
+  db.query(sql, function(err, result) {
+    if (err) throw err;
+    res.redirect("http://localhost:3000/users/manager?page=1&loai=tt");
+  });
+});
+//Cập nhật ảnh của profile
+router.post('/updateImage/:id', function(req, res, next) {
+  var id = req.params.id;
+  var newImg = req.body.img1; // Lấy giá trị mới từ ô input
+
+  var sql = `UPDATE user SET img = "${newImg}" WHERE username ="${id}"`;
+
+  db.query(sql, function(err, result) {
+    if (err) throw err;
+    res.redirect("http://localhost:3000/users/manager?page=1&loai=tt");
+  });
+});
+
+//Thêm khách hàng
+router.post('/khachhang', function(req, res, next) {
+  var a = req.body
+  var sql = `insert into customer(name, phone, ngaysinh, address, trangthai, order_project) values("${a.name}", "${a.phone}",${a.ngaysinh}, "${a.address}","${a.trangthai}","${a.order}")`
+  db.query(sql,function(err,result){
+    if (err) {
+      console.error('Error executing query: ' + err.stack);
+      // Hiển thị thông báo cảnh báo nếu có lỗi
+      res.send("Lỗi do nhập thông tin chưa chính xác!")
+
+      return;
+    }
+    res.redirect("http://localhost:3000/users/manager?page=3&loai=cv")
+  })
+});
+//Xóa KH
+router.get('/xoaKH/:id', function(req, res, next) {
+  var page = req.query['page'];
+  var loai = req.query['loai'];
+  var sql = `delete from customer where id="${req.params.id}"`;
+  db.query(sql, function(err, result) {
+    if (err) throw err;
+    res.redirect(`http://localhost:3000/users/manager?page=${page}&loai=${loai}`);    
+  });
+});
 
 
 router.get('/manager', function(req, res, next) {
@@ -173,10 +308,7 @@ router.get('/manager', function(req, res, next) {
       var username = req.session.user.username
       sql = `select * from user where username = '${username}'`
     }
-   
   }
-
-
 
 }
 
@@ -209,38 +341,9 @@ router.get('/manager', function(req, res, next) {
         e.ngayBD = moment(e.ngayBD).format('DD-MM-YYYY')
         e.ngayKT = moment(e.ngayKT).format('DD-MM-YYYY')
       }
-       sql2 = `select*from user WHERE quyen = 3`
     }
-      if(sql2 != null){
-        db.query(sql2,(err,result)=>{
-          if(err) throw err;
-          res.render('manager.ejs',{id:id,loai:loai,data:data,result:result});
-        })
-      }
-      else {
-        //res.send(data)
-        res.render('manager.ejs',{id:id,loai:loai,data:data});
-      }
-    // var sql2 = `select*from user WHERE quyen = 3`
-    //   db.query(sql2,(err,result)=>{
-    //     if(err) throw err;
-    //     dt2 = result
-    //     res.send(data.length)
-    //   })
-    // if(dt2 != null)
-    //     {
-    //       res.send('sss')
-    //     }
-    //     //res.render('manager.ejs',{id:id,loai:loai,data:data,result:data2});
-    // else
-    // {
-    //   res.send('bbb')
-    // }
-        //res.render('manager.ejs',{id:id,loai:loai,data:data});
-        //res.send(data1)
-        // if(data.affectedRows > 0){
-        //   res.send(data1)
-        // }
+    //res.send(data)
+    res.render('manager.ejs',{id:id,loai:loai,data:data});
   } )
 }
 });
