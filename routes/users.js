@@ -341,9 +341,16 @@ router.get('/manager', function(req, res, next) {
         e.ngayBD = moment(e.ngayBD).format('DD-MM-YYYY')
         e.ngayKT = moment(e.ngayKT).format('DD-MM-YYYY')
       }
+      sql2 = "select * from user where quyen = 3"
+      db.query(sql2,(err, result)=>{
+        if(err) throw err;
+        res.render('manager.ejs',{id:id,loai:loai,data:data, result: result});
+      })
     }
-    //res.send(data)
-    res.render('manager.ejs',{id:id,loai:loai,data:data});
+    else {
+      res.render('manager.ejs',{id:id,loai:loai,data:data});
+    }
+    
   } )
 }
 });
