@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý nhân viên</title>
-    <link rel='stylesheet' href='/task-manager/public/stylesheets/style.css' />
-    <link rel="stylesheet" href="/stylesheets/fontawesome-free-6.5.1-web/css/all.min.css" />
+    <link rel='stylesheet' href='/task-manager/public/stylesheets/style.css' />    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>    
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
@@ -22,6 +22,18 @@
           .inputImg{
             display: none;
           }
+          .edit-button{
+            padding: 2px 10px;
+            background: red;
+          }
+          .delete{
+            background-color: #f21b04;            
+            border: solid 1px #f21b04;
+          }
+          .edit{
+            background-color: #0e85ce;
+            border: solid 1px #0e85ce;
+          }
         </style>
     
 </head>
@@ -35,7 +47,7 @@
     <% if(id == 3){ %>
       <div class="tb" style="flex-grow: 1; flex-basis: 70%; margin: 0; padding: 0">         
         <h2 style="text-align: center; margin: 50px;">Danh sách khách hàng cần liên hệ</h2>
-        <button class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#exampleModal1">Thêm khách hàng</button>
+        <button class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#exampleModal1" ><i class="fa-solid fa-user"></i> Thêm khách hàng</button>
         <!-- đổ dữ liệu lên -->
         <table id="example" class="table table-striped table-hover" >
           <thead>
@@ -61,7 +73,7 @@
                 <td><%= e.ngaysinh %></td>
                 <td> <%= e.address %></td>
                 <td>
-                  <a href="/users/xoaKH/<%= e.id%>?page=3&loai=cv" style="color: red; text-decoration: none;">Xóa</a>
+                  <a href="/users/xoaKH/<%= e.id%>?page=3&loai=cv" class="btn btn-danger delete"  style="color: #fff; text-decoration: none;"><i class="fa-solid fa-trash" ></i></a>
                 </td>
             </tr>
               
@@ -73,7 +85,7 @@
  <% } } else if(loai == 'nv'){ %>
   <div class="tb" style="flex-grow: 1; flex-basis: 70%; margin: 0; padding: 0"> 
     <h2 style="text-align: center; margin: 50px;" >Danh sách nhân viên</h2>
-    <button class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#exampleModal">Thêm nhân viên</button>
+    <button class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#exampleModal"> <i class="fa-solid fa-user"></i> Thêm nhân viên</button>
     <!-- <a href="#" class="btn btn-primary position-absolute bottom-1 mb-2" data-bs-toggle="modal" data-bs-target="#exampleModal">Thêm nhân viên</a> -->
     <!-- đổ dữ liệu lên -->
     <table id="example" class="table table-striped table-hover" >
@@ -103,13 +115,13 @@
             <td> <%= e.ngaysinh %></td>          
             <td> <img src="<%= e.img %>" width="40px" height="30px" alt="Ko có ảnh"></td>
             <td>
-              <a href="/users/sua/<%= e.username %>"  style="color: red; text-decoration: none;">Chỉnh sửa</a> |
+              <a href="/users/sua/<%= e.username %>"  class="btn btn-primary edit" style="color: #fff; text-decoration: none;"><i class="fa-solid fa-pencil"></i></a> |                 
               <% if (id == 1) {%>              
-                <a href="/users/xoa/<%= e.username%>?page=1&loai=nv"  style="color: red; text-decoration: none;">Xóa</a>
+                <a href="/users/xoa/<%= e.username%>?page=1&loai=nv"  class="btn btn-danger delete"  style="color: #fff; text-decoration: none;"><i class="fa-solid fa-trash" ></i></a>
                 <% } else  if(id ==2 ) { %>                  
-                  <a href="/users/xoa/<%= e.username%>?page=2&loai=nv"  style="color: red; text-decoration: none;">Xóa</a>
+                  <a href="/users/xoa/<%= e.username%>?page=2&loai=nv"  class="btn btn-danger delete"  style="color: #fff; text-decoration: none;"><i class="fa-solid fa-trash" ></i></a>
                 <% } else  if (id == 3 ) { %>                   
-                  <a href="/users/xoa/<%= e.username%>?page=3&loai=nv"  style="color: red; text-decoration: none;">Xóa</a>
+                  <a href="/users/xoa/<%= e.username%>?page=3&loai=nv"  class="btn  btn-danger delete"  style="color: #fff; text-decoration: none;"><i class="fa-solid fa-trash" ></i></a>
                 <%  
               } %>
             </td>
@@ -234,7 +246,7 @@
           </div>
           <div class="mb-2">
             <label class="form-label">Ngày sinh</label>
-            <input type="date" class="form-control" name="ngaysinh">
+            <input type="date" class="form-control" name="ngaysinh1">
           </div>
           <div class="mb-2">
             <label class="form-label">Địa chỉ</label>

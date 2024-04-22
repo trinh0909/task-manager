@@ -70,6 +70,19 @@
   .colnb a{
           color: white;
         }
+        .nb .nav-link {
+          color: #5f6c77; /* Màu chữ và icon mặc định */
+          font-size: 17px; /* Kích thước font mặc định */
+        }
+
+        .nb .nav-link:hover {
+          color: #349af5; /* Màu chữ và icon khi hover */
+        }
+
+        .nb .nav-link.active {
+          color: #349af5; /* Màu chữ và icon của item đã được chọn */
+        }
+        
       </style>
 </head>
 <body>
@@ -77,11 +90,14 @@
  
     <div class="cl navbar navbar-expand-lg navbar-light">
         <div class="container-fluid">
-        <a class="navbar-brand mt-3" href="#">Projects</a>
+        <!-- <a class="navbar-brand mt-3" href="#">Projects</a> -->
+        <a class="navbar-brand mt-2" href="#">
+          <img src="/images/logo1.png" alt="Avatar Logo" style="width:40px;"> 
+        </a>
         <button class="br1 navbar-toggler ml-auto mt-2 mb-2" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse mt-3" id="navbarNavAltMarkup">
+        <div class="collapse navbar-collapse mt-2" id="navbarNavAltMarkup">
             <div class="colnb navbar-nav">
                 <%if(session.user.access == 1){ if(loai == 'cv'  ) { var count = 0 %>
                     <a class="nav-item nav-link active" id ='1' href="/users/manager?page=1&loai=<%= loai %>">Công việc chưa giao</a> 
@@ -98,8 +114,7 @@
                <%} } %>
                <% if(session.user.access == 2 || session.user.access == 3) { if(loai == 'cv'  ) {%>  
                 <a class="nav-item nav-link" id ='1' href="/users/manager?page=1&loai=<%= loai %>">công việc cần hoàn thành</a> 
-                <a class="nav-item nav-link" id ='2' href="/users/manager?page=2&loai=<%= loai %>">công việc đã hoàn thành</a>   
-                
+                <a class="nav-item nav-link" id ='2' href="/users/manager?page=2&loai=<%= loai %>">công việc đã hoàn thành</a>                   
            <% } else if(loai == 'kpi'){ %>
             <a class="nav-item nav-link" id ='1' href="/users/manager?page=1&loai=<%= loai %>">tháng này</a> 
             <a class="nav-item nav-link" id ='2' href="/users/manager?page=2&loai=<%= loai %>">các tháng trước</a>   
@@ -112,24 +127,24 @@
           
           }%>
             </div>
-            <i class="fa-solid fa-bell"></i>
+            <i class="fa-solid fa-bell" style="margin-left: 8px ;"></i>
           </div>
         </div>
       </div>
       <div class="nb">
         <ul class="nbheight flex-md-column flex-row navbar-nav w-100 justify-content-between">
           <li class="nav-item ml-1 ">
-            <img src="<%= session.user.img %>" class=" anh ml-2 mt-2 mr-2" alt="ko có ảnh">
+            <img src="<%= session.user.img %>"  class=" anh ml-2 mt-2 mr-2" alt="ko có ảnh">
              <% if(session.user) { %>
               <p class="ml-2"><%= session.user.name %> </p>
               <% } %>
           </li>
           <% if(session.user.access == 1){ %>
-            <li class="nav-item mt-5" >
-              <a class="nav-link pl-0" id = "cv" href="/users/manager?page=<%= id %>&loai=cv">Công việc</a>
+            <li class="nav-item mt-2" >
+              <a class="nav-link pl-0" id = "cv" href="/users/manager?page=<%= id %>&loai=cv"><i class="fa-solid fa-bars-progress"></i>  Công việc</a>
             </li>
             <li class="nav-item mt-4">
-              <a class="nav-link pl-0" id = "nv" href="/users/manager?page=<%= id %>&loai=nv">Nhân viên</a>
+              <a class="nav-link pl-0" id = "nv" href="/users/manager?page=<%= id %>&loai=nv"> <i class="fa-solid fa-users"></i>  Nhân viên</a>
             </li>
             <li class="nav-item mt-4">
               <a class="nav-link pl-0" id="tkad" href="/users/manager?page=<%= id %>&loai=tkad">Tài khoản</a>
@@ -139,7 +154,7 @@
             </li>
         <%  } else { %> 
           <li class="nav-item mt-5" >
-            <a class="nav-link pl-0" id = "cv" href="/users/manager?page=<%= id %>&loai=cv">Công việc</a>
+            <a class="nav-link pl-0" id = "cv" href="/users/manager?page=<%= id %>&loai=cv"><i class="fa-solid fa-bars-progress"></i> Công việc</a>
           </li>
           <li class="nav-item mt-4">
             <a class="nav-link pl-0" id = "kpi" href="/users/manager?page=<%= id %>&loai=kpi">KPI</a>
@@ -150,10 +165,13 @@
        <% }
             %>
           <li class="nav-item mt-4">
-            <a class="nav-link pl-0" id="tt" href="/users/manager?page=<%= id %>&loai=tt">Thông tin cá nhân</a>
+            <a class="nav-link pl-0" id="tt" href="/users/manager?page=<%= id %>&loai=tt"><i class="fa-solid fa-circle-user"></i> Thông tin cá nhân</a>
           </li>
           <li class="nav-item mt-4">
-            <a class="nav-link pl-0" href="/users/logout">Đăng xuất</a>
+            <a class="nav-link pl-0" id="chat" href="/users/manager?page=<%= id %>&loai=chat">Trò chuyện</a>
+          </li>
+          <li class="nav-item mt-4">
+            <a class="nav-link pl-0" href="/users/logout"> <i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng xuất</a>
           </li>
          
         </ul>
@@ -167,6 +185,9 @@
         <% } %>
         <% if (loai == 'tt') { %>
           <%- include('profile.ejs') %>
+        <% } %>
+        <% if (loai == 'chat') { %>
+          <%- include('chat.ejs') %>
         <% } %>
       </div>      
 

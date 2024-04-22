@@ -103,11 +103,14 @@
           </div>
           <div class="mb-3">
               <label for="exampleInputPassword1" class="form-label">chọn nhân viên</label>
-              <select name ="nv">
-              <% for(let e of result){ %> 
-                      <option value="<%= e.username %>"><%= e.name %></option>
+              <% if(typeof result !== 'undefined') { %>
+
+                <select name ="nv">
+                  <% for(let e of result){ %> 
+                          <option value="<%= e.username %>"><%= e.name %></option>
+                 <% } %>
+                  </select>
              <% } %>
-              </select>
           </div>
             </div>
             <div class="d-flex justify-content-center mb-2">

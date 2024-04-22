@@ -252,7 +252,8 @@ router.post('/updateImage/:id', function(req, res, next) {
 //Thêm khách hàng
 router.post('/khachhang', function(req, res, next) {
   var a = req.body
-  var sql = `insert into customer(name, phone, ngaysinh, address, trangthai, order_project) values("${a.name}", "${a.phone}",${a.ngaysinh}, "${a.address}","${a.trangthai}","${a.order}")`
+  var ngaysinh = new Date(a.ngaysinh1).toISOString().slice(0, 19).replace('T', ' ');
+  var sql = `insert into customer(name, phone, ngaysinh, address, trangthai, order_project) values("${a.name}", "${a.phone}","${ngaysinh}", "${a.address}","${a.trangthai}","${a.order}")`
   db.query(sql,function(err,result){
     if (err) {
       console.error('Error executing query: ' + err.stack);
@@ -309,7 +310,6 @@ router.get('/manager', function(req, res, next) {
       sql = `select * from user where username = '${username}'`
     }
   }
-
 }
 
 
@@ -322,6 +322,12 @@ router.get('/manager', function(req, res, next) {
         sql = `SELECT * FROM projects JOIN customer ON projects.id_customer = customer.id  where projects.id_user = '${username}'` 
         
       }
+  }
+  else if(loai == 'tt'){
+    if(req.session.user){
+      var username = req.session.user.username
+      sql = `select * from user where username = '${username}'`
+    }
   }
   } 
 
