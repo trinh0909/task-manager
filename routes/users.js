@@ -3,7 +3,12 @@ var router = express.Router();
 const session = require('express-session');
 const moment = require('moment');
 const multer = require('multer');
-
+const server = require('http').Server(router);
+const fs = require('fs');
+const io = require('socket.io')(server);
+io.on("connection",function(socket){
+    console.log("connect")
+})
 function User(username, password,access,name, img) {
   this.username = username;
   this.password = password;
@@ -288,9 +293,12 @@ router.get('/manager', function(req, res, next) {
           if( id == 3)
           sql = `select * from customer where trangthai = 0`;
         else if(id == 2)
-          sql = `SELECT * FROM (projects JOIN customer ON projects.id_customer = customer.id) JOIN processing ON projects.id = processing.id_projects WHERE projects.process =1` 
+          sql = `SELECT *,customer.name AS customer_name FROM projects 
+        JOIN processing ON projects.id = processing.id_projects AND projects.process <> 0
+         JOIN customer ON projects.id_customer = customer.id 
+         JOIN user WHERE processing.id_user = user.username;` 
         else 
-         sql = `SELECT * FROM projects where process = 0` 
+         sql = `SELECT * FROM projects JOIN customer ON projects.id_customer = customer.id AND projects.process = 0` 
   }
    if(loai == 'nv') {
       if(id == 1){
@@ -303,12 +311,7 @@ router.get('/manager', function(req, res, next) {
         sql = `SELECT * FROM user JOIN access ON user.quyen = access.id where quyen = 2` 
       }
   }
-  else if(loai == 'tt'){
-    if(req.session.user){
-      var username = req.session.user.username
-      sql = `select * from user where username = '${username}'`
-    }
-  }
+ 
 
 }
 
@@ -324,6 +327,25 @@ router.get('/manager', function(req, res, next) {
       }
   }
   } 
+  else if(req.session.user.access == 3){
+    if(loai == 'cv'){
+      if(id == 1){
+        var username = req.session.user.username
+        sql = `SELECT * FROM projects JOIN processing ON projects.id = processing.id_projects AND processing.id_user='${username}' AND projects.process = 1 JOIN customer ON projects.id_customer = customer.id`
+      }
+      else if(id == 2){
+        var username = req.session.user.username
+        sql = `SELECT * FROM projects JOIN processing ON projects.id = processing.id_projects AND processing.id_user='${username}' AND projects.process = 3 JOIN customer ON projects.id_customer = customer.id`
+      
+      }
+    }
+  }
+   if(loai == 'tt'){
+    if(req.session.user){
+      var username = req.session.user.username
+      sql = `select * from user where username = '${username}'`
+    }
+  }
 
   
   db.query(sql,(err,data)=>{
@@ -336,7 +358,7 @@ router.get('/manager', function(req, res, next) {
         e.ngaysinh = moment(e.ngaysinh).format('DD-MM-YYYY')
       }
     }
-    if(loai == "cv" && id == 1){
+    if(loai == "cv" && id == 1  || loai == "cv" && id == 2){
       for(let e of data){
         e.ngayBD = moment(e.ngayBD).format('DD-MM-YYYY')
         e.ngayKT = moment(e.ngayKT).format('DD-MM-YYYY')

@@ -37,13 +37,13 @@
         }
         .card-time{
             font-size: 13px;
-        }        
+        }       
     </style>
 </head>
 <body>
-  <% if(session.user.access == 1 && loai == "cv" && id == 1){ %>
+  <% if(session.user.access == 1 && loai == "cv" && id == 1){ %> <div style="display: flex; gap: 1%;flex-wrap: wrap">
     <% for(let i of data){ var gia = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(i.gia*1000); %>
-    <div class="card" style="width:32.3%; height: 360px;"> 
+    <div class="card" style="width:32.3%; height: 400px; margin-bottom: 10px;"> 
       <div class="card-top d-flex">
           <p class="text-left">Trạng thái: </p>
           <p class="text-right">Chưa giao</p>  
@@ -51,6 +51,7 @@
       <div class="card-body  custom-card-body">
         <h4 class="card-title"><%= i.namePJ %></h4>
         <div class="card-time">
+          <p style="font-weight: bold">Khách hàng: <%= i.name %></p>
           <p class="card-text">start: <%= i.ngayBD %></p>
          
           <p class="card-text">end:  <%= i.ngayKT %> </p>
@@ -64,10 +65,15 @@
               <p class="card-text mb-2">Giá tiền: <%=  gia %></p>         
 
             </div>  
-            <input type="button" data-bs-toggle="modal" data-bs-target="#exampleModal11"  class="btn btn-primary position-absolute bottom-1 mb-2" onclick="datajob('<%= i.id_customer %>','<%= i.id %>','<%= i.namePJ %>', '<%= i.ngayBD %>','<%= i.ngayKT %>','<%= i.description %>','<%= i.gia*1000 %>')" value="Giao công việc">
+            <input type="button" data-bs-toggle="modal" data-bs-target="#exampleModal11" 
+             class="btn btn-primary position-absolute bottom-1 mb-2"
+              onclick="datajob('<%= i.name %>' ,'<%= i.id_customer %>','<%= i.id %>','<%= i.namePJ %>', 
+              '<%= i.ngayBD %>','<%= i.ngayKT %>','<%= i.description %>','<%= i.gia*1000 %>')"
+              value="Giao công việc">
       </div>
     </div>
-  <% } }%>
+  <% } %> </div> <% }%>
+ 
   <!-- Modal Thêm Nhân Viên-->
 <div class="modal fade" id="exampleModal11" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -81,6 +87,10 @@
           <div class="mb-2">
             <label for="username" class="form-label">Tên công việc</label>
             <input type="text" class="form-control" name="idpro" id="idpro" aria-describedby="emailHelp">                  
+          </div>
+          <div class="mb-2">
+            <label for="username" class="form-label">Tên khách hàng</label>
+            <input type="text" class="form-control" name="namekh" id="namekh" aria-describedby="emailHelp">                  
           </div>
           <div class="mb-3">
               <input type="hidden" name="idCV" id = "idCV">
@@ -103,11 +113,15 @@
           </div>
           <div class="mb-3">
               <label for="exampleInputPassword1" class="form-label">chọn nhân viên</label>
-              <select name ="nv">
-              <% for(let e of result){ %> 
-                      <option value="<%= e.username %>"><%= e.name %></option>
+              <% if(typeof result !== 'undefined') { %>
+
+                <select name ="nv">
+                  <% for(let e of result){ %> 
+                          <option value="<%= e.username %>"><%= e.name %></option>
+                 <% } %>
+                  </select>
              <% } %>
-              </select>
+             
           </div>
             </div>
             <div class="d-flex justify-content-center mb-2">
@@ -118,13 +132,133 @@
         </form>
       </div>
     </div>
+  <% if(session.user.access == 3 && loai == "cv" && id == 1) {%>
+    
+    <div style="display: flex; gap: 1%;flex-wrap: wrap">
+      <% for(let i of data){ var gia = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(i.gia*1000); %>
+      
+      <div class="card" style="width:32.3%; height: 400px; margin-bottom: 10px;"> 
+        <div class="card-top d-flex">
+            
+            <p class="text-left">Trạng thái: </p>
+            <p class="text-right">Đang thực hiện</p>  
+        </div>             
+        <div class="card-body  custom-card-body">
+          <h4 class="card-title"><%= i.namePJ %></h4>
+          <h6 class="card-title">khách hàng: <%= i.name %></h6>
+          <div class="card-time">
+            <p class="card-text">start: <%= i.ngayBD %></p>
+           
+            <p class="card-text">end:  <%= i.ngayKT %> </p>
+          </div>          
+            <div style="height: 120px;">
+                <p class="card-text" style="max-height: 100px; overflow-y: auto;">Mô tả : <%= i.description %></p>
+            </div>
+             <div class="d-flex">
+                
+                
+                <p class="card-text mb-2">Giá tiền: <%=  gia %></p>         
+  
+              </div> 
+              <form action="/project/processDone" method="POST">
+                <input type="hidden" name="idproject" value="<%= i.id_projects %>">
+              <input type="submit"  class="btn btn-primary position-absolute bottom-1 mb-2" onclick="return confirmSubmit()" value="Hoàn thành" >
+            </form>
+        </div>
+      </div>
+    
+    <% } %> </div> 
+
+    <% } %>
+    <% if(session.user.access == 3 && loai == "cv" && id == 2){ %>
+      <div style="display: flex; gap: 1%;flex-wrap: wrap">
+        <% for(let i of data){ var gia = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(i.gia*1000); %>
+        
+        <div class="card" style="width:32.3%; height: 360px; margin-bottom: 10px;"> 
+          <div class="card-top d-flex">
+              
+              <p class="text-left">Trạng thái: </p>
+              <p class="text-right">Hoàn thành</p>  
+          </div>             
+          <div class="card-body  custom-card-body">
+            <h4 class="card-title"><%= i.namePJ %></h4>
+            <h6 class="card-title">Khách hàng: <%= i.name %></h6>
+            
+            <div class="card-time">
+             
+              <p class="card-text">start: <%= i.ngayBD %></p>
+             
+              <p class="card-text">end:  <%= i.ngayKT %> </p>
+            </div>          
+              <div style="height: 120px;">
+                  <p class="card-text" style="max-height: 100px; overflow-y: auto;">Mô tả : <%= i.description %></p>
+              </div>
+               <div class="d-flex">
+                  
+                  
+                  <p class="card-text mb-2">Giá tiền: <%=  gia %></p>         
+    
+                </div> 
+                <!-- <form action="/project/processDone" method="POST">
+                  <input type="hidden" name="idproject" value="<%= i.id_projects %>">
+                <input type="submit"  class="btn btn-primary position-absolute bottom-1 mb-2" onclick="return confirmSubmit()" value="Hoàn thành" >
+              </form> -->
+          </div>
+        </div>
+      
+      <% } %> </div> 
+  
+      <% } %>
+
+      <% if(session.user.access == 1 && loai == "cv" && id == 2){ %>
+        <div class="tb" style="flex-grow: 1; flex-basis: 70%; margin: 0; padding: 0">         
+          <h2 style="text-align: center; margin: 50px;">Danh sách khách hàng cần liên hệ</h2>
+          <button class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#exampleModal1">Thêm khách hàng</button>
+          <table id="example" class="table table-striped table-hover" >
+            <thead>
+              <tr>
+                  <th>Tên Công việc</th>
+                  <th>Người nhận việc</th>
+                  <th>email</th>
+                  <th>Khách hàng</th>
+                  <th>Ngày bắt đầu</th>
+                  <th>Ngày kết thúc</th>
+                  <th>Trạng thái</th>
+                  <th>Select</th> 
+              </tr>
+            </thead>
+          <tbody>
+            <% if(data.length !=0){ %>
+              <% for(let e of data) { %>
+                <tr>
+                  <td><%= e.namePJ %></td>
+                  <td><%= e.name %></td>
+                  <td><%= e.username %></td>
+                  <td><%= e.customer_name %></td>
+                  <td> <%= e.ngayBD %></td>
+                  <td> <%= e.ngayKT %></td>
+                  <% if(e.process == 3){ %> 
+                      <td>Done</td>
+                      <td></td>
+                    <% } else { %>
+                        <td>Đang thực hiện</td>
+                        <td><a href="#">thu hồi</a></td>
+                      <% } %>
+              </tr>
+           <% } } %>
+          </table>
+        </div>
+      <% } %>
    
   
     
 </body>
 </html>
 <script>
-    function datajob(idkh,id, name,  ngayBD, ngayKT, description,gia){ 
+    function confirmSubmit() {
+    return confirm("Bạn có chắc đã hoàn thành công việc này chưa?");
+}
+    function datajob(tenkh, idkh,id, name,  ngayBD, ngayKT, description,gia){ 
          document.getElementById('idpro').value = name
          document.getElementById('ngayBD').value = ngayBD
          document.getElementById('ngayKT').value = ngayKT
@@ -132,6 +266,7 @@
          gia =new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(gia);
          document.getElementById('gia').value = gia
          document.getElementById('idCV').value = id
-         document.getElementById('idkh').value = idkh
+         document.getElementById('idkh').value = idkh  
+         document.getElementById('namekh').value = tenkh
     }
 </script>
