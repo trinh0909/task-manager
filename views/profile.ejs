@@ -45,7 +45,7 @@
 <body>
     <div class="container">
         <div class="row">
-           
+            <% if(session.user.access == 1){ %>
                 <% if(loai =='tt'){ %> 
                     <% if(data.length !=0){ %>
                         <% for(let e of data) { %>
@@ -136,9 +136,9 @@
             </div>            
             <% } } %>
 
-            <%}
+            <%} %>            
 
-            %>            
+            }%>            
         </div>
     </div>
 </body>

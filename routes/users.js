@@ -86,8 +86,8 @@ router.post('/forgotpasswd', function(req, res, next) {
       let transporter = nodemailer.createTransport({
         service: 'Gmail',
         auth: {
-          user: 'lekimngan22102002@gmail.com', // Địa chỉ email của bạn
-          pass: 'okngrxtogvrqxvej' // Mật khẩu email của bạn
+          user: 'truongmaitrinh0909@gmail.com', // Địa chỉ email của bạn
+          pass: 'cgfn hume wuyf pahl' // Mật khẩu email của bạn
         }
       });
     
@@ -145,6 +145,8 @@ router.post('/reset', function(req, res) {
 //Thêm nhân viên
 router.post('/nhanvien', function(req, res, next) {
   var a = req.body
+  var username = a.username;   
+  var password = a.passwork;
   var sql = `insert into user(username, passwork, quyen, name, diachi, sdt, ngaysinh, img ) values("${a.username}", "${a.passwork}",${a.quyen}, "${a.name}","${a.diachi}","${a.sdt}","${a.ngaysinh}","${a.img}")`
   db.query(sql,function(err,result){
     if (err) {
@@ -154,6 +156,34 @@ router.post('/nhanvien', function(req, res, next) {
 
       return;
     }
+
+    // Tạo một transporter
+    let transporter = nodemailer.createTransport({
+      service: 'Gmail',
+      auth: {
+        user: 'truongmaitrinh0909@gmail.com', // Địa chỉ email của bạn
+        pass: 'cgfn hume wuyf pahl' // Mật khẩu email của bạn
+      }
+    });
+  
+    // Tạo một email
+    let mailOptions = {
+      from: 'lekimngan22102002@gmail.com', // Địa chỉ email của bạn
+      to: username, // Địa chỉ email của người nhận (lấy từ yêu cầu POST)
+      subject: 'Thông báo cấp tài khoản',
+      html: 'Bạn đã được cấp tài khoản! Vui lòng truy cập vào website để đăng nhập!  <br> Username: '  + username + ' <br> Password: ' + password
+    };
+  
+    // Gửi email
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log(error);
+        return res.status(500).send('Internal Server Error');
+      }
+      console.log('Email sent: ' + info.response);
+      return res.status(200).send('Email sent successfully');        
+    });
+
     res.redirect("http://localhost:3000/users/manager?page=1&loai=nv")
   })
 });
@@ -257,7 +287,8 @@ router.post('/updateImage/:id', function(req, res, next) {
 //Thêm khách hàng
 router.post('/khachhang', function(req, res, next) {
   var a = req.body
-  var sql = `insert into customer(name, phone, ngaysinh, address, trangthai, order_project) values("${a.name}", "${a.phone}",${a.ngaysinh}, "${a.address}","${a.trangthai}","${a.order}")`
+  var ngaysinh = new Date(a.ngaysinh1).toISOString().slice(0, 19).replace('T', ' ');
+  var sql = `insert into customer(name, phone, ngaysinh, address, trangthai, order_project) values("${a.name}", "${a.phone}","${ngaysinh}", "${a.address}","${a.trangthai}","${a.order}")`
   db.query(sql,function(err,result){
     if (err) {
       console.error('Error executing query: ' + err.stack);
@@ -311,8 +342,19 @@ router.get('/manager', function(req, res, next) {
         sql = `SELECT * FROM user JOIN access ON user.quyen = access.id where quyen = 2` 
       }
   }
- 
 
+  else if(loai == 'tt'){
+    if(req.session.user){
+      var username = req.session.user.username
+      sql = `select * from user where username = '${username}'`
+    }
+  }
+  else if(loai == 'chat'){
+    if(req.session.user){
+      var username = req.session.user.username
+      sql = `select * from user where username = '${username}'`
+    }
+  }
 }
 
 
@@ -325,6 +367,18 @@ router.get('/manager', function(req, res, next) {
         sql = `SELECT * FROM projects JOIN customer ON projects.id_customer = customer.id  where projects.id_user = '${username}'` 
         
       }
+  }
+  else if(loai == 'tt'){
+    if(req.session.user){
+      var username = req.session.user.username
+      sql = `select * from user where username = '${username}'`
+    }
+  }
+  else if(loai == 'chat'){
+    if(req.session.user){
+      var username = req.session.user.username
+      sql = `select * from user where username = '${username}'`
+    }
   }
   } 
   else if(req.session.user.access == 3){
