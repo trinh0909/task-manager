@@ -127,7 +127,10 @@
           
           }%>
             </div>
-            <i class="fa-solid fa-bell" style="margin-left: 8px ;"></i>
+            <div style="margin-left: 0px;">
+              <i class="fa-solid fa-bell" style="margin-left: 8px ;"></i>
+              <a id="chat" href="/users/manager?page=<%= id %>&loai=chat"><i class="fa-solid fa-comment-dots " style="margin-left: 20px ;"></i></a>
+            </div>
           </div>
         </div>
       </div>
@@ -147,9 +150,6 @@
               <a class="nav-link pl-0" id = "nv" href="/users/manager?page=<%= id %>&loai=nv"> <i class="fa-solid fa-users"></i>  Nhân viên</a>
             </li>
             <li class="nav-item mt-4">
-              <a class="nav-link pl-0" id="tkad" href="/users/manager?page=<%= id %>&loai=tkad">Tài khoản</a>
-            </li>
-            <li class="nav-item mt-4">
               <a class="nav-link pl-0" id="cl" href="/users/manager?page=<%= id %>&loai=cl">Ca làm</a>
             </li>
         <%  } else { %> 
@@ -166,9 +166,6 @@
             %>
           <li class="nav-item mt-4">
             <a class="nav-link pl-0" id="tt" href="/users/manager?page=<%= id %>&loai=tt"><i class="fa-solid fa-circle-user"></i> Thông tin cá nhân</a>
-          </li>
-          <li class="nav-item mt-4">
-            <a class="nav-link pl-0" id="chat" href="/users/manager?page=<%= id %>&loai=chat">Trò chuyện</a>
           </li>
           <li class="nav-item mt-4">
             <a class="nav-link pl-0" href="/users/logout"> <i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng xuất</a>

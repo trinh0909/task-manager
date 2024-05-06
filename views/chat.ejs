@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/chat.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script>
+        //Client ket noi toi server
+        // var socket = io("http://localhost:3000");
+        // $(document).ready(function(){
+        //     alert("Hello Ngan")
+        // });
+        // socket.on("sever-listuser" , function(data){
+        //     $("#boxContent").html("");
+        //     data.forEach(function(i) {
+        //         $("#boxContent").append("<div class='user'>" + i + "div");
+        //     });
+        // });
+    </script>
+</head>
+<body>
+    <% if(loai =='chat'){ %> 
+        <% if(data.length !=0){ %>
+            <% for(let e of data) { %>
+    <!-- <div class="left">
+        <div id="boxTittle">User Online</div>
+        <div id="boxContent">
+            
+        </div>
+    </div> -->
+    <div class="app">
+        <!-- Nhap username -->
+        <div class="screen join-screen active">
+            <div class="form">
+                <h2>Join Chatroom</h2>
+                <div class="form-input">
+                    <!-- <label>Username</label> -->
+                    <input type="text" id="username" value="<%= e.username %>"  style="display: none;">
+                </div>
+                <div class="form-input">
+                    <button id="join-user">Join</button>
+                </div>
+            </div>
+        </div>
+        <!-- Vao room chat -->        
+        <div class="screen chat-screen ">
+            <div class="header">
+                <div class="logo">Chatroom</div>
+                <button id="exit-chat">Exit</button>                
+            </div>
+            <div class="messages">                
+
+            </div>
+
+            <div class="typebox">
+                <input type="text" id="message-input">
+                <input type="file" id="file-input" style="display: none;">
+                <!-- <button id="send-file">Send File</button> -->
+                <button id="send-message">Send</button>
+            </div>
+        </div>
+    </div>    
+    <% } } %>
+
+    <%} %>     
+    <script type="text/javascript" src="/chat.js"></script>
+</body>
+</html>
+<script>
+    
+</script>
